@@ -1,7 +1,11 @@
-puts 'rspec helper'
 require 'powerpack/string'
+require 'tmpdir'
 
-require_relative '../lib/tracetool/router'
+def lib(path)
+  File.join(File.dirname(__FILE__), '../lib', path)
+end
+
+require_relative lib('tracetool/router')
 
 module RSpecHelpers
   def strict_android_router(ctx = OpenStruct.new)

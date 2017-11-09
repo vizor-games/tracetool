@@ -1,53 +1,31 @@
-require 'powerpack/string/strip_ident'
-
 # Tracetool root module
 module Tracetool
   # Android trace scan variant
   module Android
-    # Supported arch list
-    module Arch
-      def self.include?(arch)
-        @arch_list.include?(arch)
-      end
-
-      def self.all
-        @arch_list
-      end
-
-      @arch_list = %w(armeabi-v7a x86 armeabi).freeze
-    end
-
-    # Android unpacker implementation
-    class AndroidUnpacker
-      # Backtrace initial line of asterisks. Required marker for ndk-stack.
-      NATIVE_DUMP_DELIMETER = '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***'.freeze
-      # Template for android backtrace
-      NATIVE_DUMP_HEADER = <<-BACKTRACE.strip_ident
+    # Converts packed trace to ndk-stack compatible trace
+    class NdkPackedTraceConverter
+      # Default header for android backtrace
+      NATIVE_DUMP_HEADER = <<-BACKTRACE.strip_indent
       *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+      Build fingerprint: UNKNOWN
+      pid: 0, tid: 0
+      signal 0 (UNKNOWN)
       backtrace:
       BACKTRACE
 
-      def initialize(stack, arch, symbols)
-        # Нужно убрать joinы стеков, это один и тот же трейс
-        # А потом выбрать только тело трейса
-        @stack = stack.gsub('>>><<<', '')[/<<<(.*)>>>/, 1]
-        @arch = arch
-        # Символы лежат в local/arch
-        @symbols = File.join(symbols, 'local', arch)
-        raise "No such dir #{@symbols}" unless File.exist?(@symbols)
-      end
-
-      def scan
-        dump_body = @stack
-                    .split(';')
-                    .map
-                    .with_index { |line, index| convert_line(line, index) }
-                    .join("\n")
-        dump = [DUMP_HEADER, dump_body].join("\n")
-        `echo '#{dump}' | ndk-stack -sym #{@symbols}`.chomp
+      # Converts packed stack trace into ndk-stack compatible format
+      # @param [String] trace packed stack trace
+      # @param [] _context not used
+      def process(trace, _context)
+        dump_body = prepare(trace).map.with_index { |line, index| convert_line(line, index) }
+        NATIVE_DUMP_HEADER + dump_body.join("\n")
       end
 
       private
+
+      def prepare(trace)
+        trace.gsub('>>><<<', '')[/<<<(.+)>>>/, 1].split(';')
+      end
 
       def convert_line(line, index)
         frame = index
@@ -57,15 +35,39 @@ module Tracetool
       end
     end
 
-    def self.scan(stack, arch, symbols)
-      arch_valid = Arch.include?(arch)
-      arch_all = Arch.all.join(',')
-      
-      raise "Arch should be one of #{arch_all}" unless arch_valid
+    # Desymbolicates stack trace using ndk-stack from
+    # Android NDK
+    class NdkStackLauncher
+      # @see https://developer.android.com/ndk/guides/ndk-stack.html
+      # @param [String] trace stack trace in ndk-stack compatible
+      #  format
+      # @param [OpenStruct] ctx context containing path to symbols
+      # @return [String] desymbolicated stack trace
+      def process(trace, ctx)
+        Pipe['ndk-stack', '-sym', ctx.symbols] << trace
+      end
+    end
 
-      raise "No such directory #{symbols}" unless File.exist?(symbols)
-      raise "Not a directory #{symbols}" unless File.directory?(symbols)
-      AndroidUnpacker.new(stack, arch, symbols).scan
+    def self.scan(stack, symbols)
+      router = AndroidRouter.new(OpenStruct.new(symbols: symbols))
+
+      router.java do |trace, ctx|
+        process(trace, ctx)
+      end
+
+      router.ndk do |trace, ctx|
+        process(trace, ctx, NdkStackLauncher.new)
+      end
+
+      router.packed_ndk do |trace, ctx|
+        process(trace, ctx, NdkPackedTraceConverter.new, NdkStackLauncher.new)
+      end
+
+      router.handle(stack)
+    end
+
+    def process(trace, ctx, *queue)
+      queue.inject(trace) { |acc, elem| elem.process(acc, ctx) }
     end
   end
 end
