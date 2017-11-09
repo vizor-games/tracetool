@@ -48,17 +48,11 @@ module Tracetool
       end
     end
 
-
     def self.scan(stack, symbols)
       router = AndroidRouter.new(OpenStruct.new(symbols: symbols))
 
-      router.java do |trace, ctx|
-        process(trace, ctx)
-      end
-
-      router.ndk do |trace, ctx|
-        process(trace, ctx, NdkStackLauncher.new)
-      end
+      router.java { |trace, ctx| process(trace, ctx) }
+      router.ndk { |trace, ctx| process(trace, ctx, NdkStackLauncher.new) }
 
       router.packed_ndk do |trace, ctx|
         process(trace, ctx, NdkPackedTraceConverter.new, NdkStackLauncher.new)

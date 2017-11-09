@@ -72,12 +72,12 @@ module Tracetool
     def opt_common(opts)
       opts.separator 'Common options:'
       # Specify arch
-      opts.on('--arch ARCH', [:'armeabi-v7a', :armeabi, :x86, :arm64], 'Specify arch (armeabi-v7a, x86, arm64)') do |arch|
+      opts.on('--arch ARCH', %i[armeabi-v7a armeabi x86 arm64], 'Specify arch (armeabi-v7a, x86, arm64)') do |arch|
         @options.arch = arch
       end
 
       # Specify platform
-      opts.on('--platform PLATORM', [:android, :ios], 'Specify platform (android, ios)') do |platform|
+      opts.on('--platform PLATORM', %i[android ios], 'Specify platform (android, ios)') do |platform|
         @options.platform = platform
       end
 

@@ -10,7 +10,7 @@ require_relative lib('tracetool/router')
 module RSpecHelpers
   def strict_android_router(ctx = OpenStruct.new)
     router = Tracetool::AndroidRouter.new(ctx)
-    Tracetool::AndroidRouter::ROUTES.values.each do |v|
+    Tracetool::AndroidRouter::ROUTES.each_value do |v|
       router.on(v) do
         raise(ArgumentError, "'#{v}' should not be called")
       end

@@ -21,7 +21,7 @@ module Tracetool
   class AndroidNdkMatcher
     # Initial sequence of asterisks which marks begining of trace body
     TRACE_DELIMETER = '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***'.freeze
-    RX_TRACE_DELIMETER =%r{^.+ #{TRACE_DELIMETER.gsub('*', '\*')}$}
+    RX_TRACE_DELIMETER = /^.+ #{TRACE_DELIMETER.gsub('*', '\*')}$/
     # Tells if provided string is a ndk trace
     # @return [MatchResult]
     def match(string)
@@ -43,7 +43,7 @@ module Tracetool
     # ** symbol offset `/\d+/`
     #
     # Last two entries can be missing.
-    RX_PACKED_FORMAT =%r{^(<<<(\d+ [^ ]+ ([^ ]+ \d+)?;)+>>>)+$}
+    RX_PACKED_FORMAT = /^(<<<(\d+ [^ ]+ ([^ ]+ \d+)?;)+>>>)+$/
 
     def match(string)
       RX_PACKED_FORMAT.match(string)
@@ -84,7 +84,7 @@ module Tracetool
     # Replaces "\\n" with "\n"
     # Replaces "\\t" with "\t"
     def sanitize(string)
-      string.gsub("\\n", "\n").gsub("\\t", "\t")
+      string.gsub('\n', "\n").gsub('\t', "\t")
     end
   end
 
@@ -94,19 +94,19 @@ module Tracetool
     # Determines which route should be used
     # to process trace
     ROUTES = {
-        AndroidJavaMatcher.new => :java,
-        AndroidNdkMatcher.new => :ndk,
-        AndroidNdkPackedMatcher.new => :packed_ndk
-    }
+      AndroidJavaMatcher.new => :java,
+      AndroidNdkMatcher.new => :ndk,
+      AndroidNdkPackedMatcher.new => :packed_ndk
+    }.freeze
 
     # Generate sugar methods
-    ROUTES.values.each do |v|
+    ROUTES.each_value do |v|
       eval(<<-METH.strip_indent
            def #{v}(&block)
-             on(:#{v}, &block) 
+             on(:#{v}, &block)
            end
       METH
-      )
+          )
     end
 
     def initialize(ctx = OpenStruct.new)
@@ -118,17 +118,17 @@ module Tracetool
   # it to proper handler
   class IOSRouter < Router
     ROUTES = {
-        /.+/ => :ios
-    }
+      /.+/ => :ios
+    }.freeze
 
     # Generate sugar methods
-    ROUTES.values.each do |v|
+    ROUTES.each_value do |v|
       eval(<<-METH.strip_indent
            def #{v}(&block)
-             on(:#{v}, &block) 
+             on(:#{v}, &block)
            end
       METH
-      )
+          )
     end
 
     def initialize(ctx = OpenStruct.new)
