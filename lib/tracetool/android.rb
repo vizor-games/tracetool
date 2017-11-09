@@ -48,6 +48,7 @@ module Tracetool
       end
     end
 
+
     def self.scan(stack, symbols)
       router = AndroidRouter.new(OpenStruct.new(symbols: symbols))
 
