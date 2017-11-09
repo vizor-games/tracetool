@@ -3,8 +3,8 @@ require_relative '../../lib/tracetool/router'
 describe Tracetool::AndroidNdkMatcher do
   describe '#match' do
     context 'when it logcat output with trace' do
-      let (:matcher) { Tracetool::AndroidNdkMatcher.new }
-      let (:trace) do
+      let(:matcher) { Tracetool::AndroidNdkMatcher.new }
+      let(:trace) do
         # Example from https://developer.android.com/ndk/guides/ndk-stack.html
         <<-NDK.strip_indent
         I/DEBUG   (   31): *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
@@ -156,11 +156,11 @@ end
 describe Tracetool::Router do
   describe '#handle' do
     context 'string content' do
-      let(:router) { Tracetool::Router.new({}, {/.*/ => :test}) }
+      let(:router) { Tracetool::Router.new({}, /.*/ => :test) }
       it 'should sanitize strings' do
         fixtures = {
-            'foo\nbar' => "foo\nbar",
-            'foo\tbar' => "foo\tbar"
+          'foo\nbar' => "foo\nbar",
+          'foo\tbar' => "foo\tbar"
         }
 
         fixtures.each do |original, sanitized|
@@ -171,7 +171,7 @@ describe Tracetool::Router do
 
     context 'context should be passed' do
       let(:ctx) { OpenStruct.new(foo: 42) }
-      let(:router) { Tracetool::Router.new(ctx, {/.*/ => :test }).on(:test, &->(_s, ctx) { ctx } ) }
+      let(:router) { Tracetool::Router.new(ctx, /.*/ => :test).on(:test, &->(_s, ctx) { ctx }) }
       it { expect(router.handle('test')).to be(ctx) }
     end
   end
@@ -181,7 +181,7 @@ describe Tracetool::AndroidRouter do
   describe 'event handlers' do
     let(:router) { Tracetool::AndroidRouter.new }
 
-    Tracetool::AndroidRouter::ROUTES.values.each do |method|
+    Tracetool::AndroidRouter::ROUTES.each_value do |method|
       it "responds to #{method}" do
         expect(router).to respond_to(method)
       end

@@ -21,20 +21,20 @@ describe Tracetool::IOS::IOSTraceParser do
     TRACE
 
     expect(parser.parse(trace)).to match_array([
-                                                   %w[Foo 0x00000001029b2d48],
-                                                   %w[Foo 0x00000001029b37d0],
-                                                   %w[libsystem_platform.dylib 0x00000001857dbb44],
-                                                   %w[Foo 0x0000000102cf6178],
-                                                   %w[Foo 0x0000000102cc36c0],
-                                                   %w[UIKit 0x000000018efc4078],
-                                                   %w[UIKit 0x000000018f903f98],
-                                                   %w[CoreFoundation 0x0000000185b5c358],
-                                                   %w[CoreFoundation 0x0000000185b5c2d8],
-                                                   %w[CoreFoundation 0x0000000185a7a2d8],
-                                                   %w[GraphicsServices 0x000000018790bf84],
-                                                   %w[UIKit 0x000000018f027880],
-                                                   %w[Foo 0x0000000102995c08],
-                                                   %w[libdyld.dylib 0x000000018559e56c]
+                                                 %w[Foo 0x00000001029b2d48],
+                                                 %w[Foo 0x00000001029b37d0],
+                                                 %w[libsystem_platform.dylib 0x00000001857dbb44],
+                                                 %w[Foo 0x0000000102cf6178],
+                                                 %w[Foo 0x0000000102cc36c0],
+                                                 %w[UIKit 0x000000018efc4078],
+                                                 %w[UIKit 0x000000018f903f98],
+                                                 %w[CoreFoundation 0x0000000185b5c358],
+                                                 %w[CoreFoundation 0x0000000185b5c2d8],
+                                                 %w[CoreFoundation 0x0000000185a7a2d8],
+                                                 %w[GraphicsServices 0x000000018790bf84],
+                                                 %w[UIKit 0x000000018f027880],
+                                                 %w[Foo 0x0000000102995c08],
+                                                 %w[libdyld.dylib 0x000000018559e56c]
                                                ])
   end
 end
@@ -42,19 +42,21 @@ end
 describe Tracetool::IOS::AtosContext do
   let(:ctx) do
     c = OpenStruct.new(
-        module_name: 'Foo',
-        xarchive: '/tmp/Foo.xarchive',
-        load_address: '0x0',
-        arch: 'x86_64')
+      module_name: 'Foo',
+      xarchive: '/tmp/Foo.xarchive',
+      load_address: '0x0',
+      arch: 'x86_64'
+    )
     Tracetool::IOS::AtosContext.new(c)
   end
 
   describe '#to_args' do
     it 'converts context to command arguments' do
       expect(ctx.to_args).to match_array(%w[
-    -o /tmp/Foo.xarchive/dSYMs/Foo.app.dSYM/Contents/Resources/DWARF/Foo
-    -l 0x0
-    -arch x86_64])
+                                           -o /tmp/Foo.xarchive/dSYMs/Foo.app.dSYM/Contents/Resources/DWARF/Foo
+                                           -l 0x0
+                                           -arch x86_64
+                                         ])
     end
   end
 
@@ -86,16 +88,17 @@ describe Tracetool::IOS::AtosLauncher do
 
     let(:ctx) do
       OpenStruct.new(
-          load_address: '0x0',
-          xarchive: 'tmp',
-          module_name: 'FooModule')
+        load_address: '0x0',
+        xarchive: 'tmp',
+        module_name: 'FooModule'
+      )
     end
 
     it 'should unpack trace' do
       input = [
-          %w[FooModule 0x00000001029b37d0],
-          %w[FooModule 0x00000001029b2d48],
-          %w[UIKit 0x000000018559e56c],
+        %w[FooModule 0x00000001029b37d0],
+        %w[FooModule 0x00000001029b2d48],
+        %w[UIKit 0x000000018559e56c]
       ]
       ex = <<-EXPECTED.strip_indent.chomp
       0 FooModule some::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)

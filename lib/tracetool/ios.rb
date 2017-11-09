@@ -19,12 +19,13 @@ module Tracetool
       end
     end
 
+    # Converts context to atos arguments
     class AtosContext
       # If no arch specified will use `arm64`
       DEFAULT_ARCH = 'arm64'.freeze
 
       # List of required argument names
-      REQUIRED_ARGUMENTS = %i[load_address xarchive module_name]
+      REQUIRED_ARGUMENTS = %i[load_address xarchive module_name].freeze
 
       #
       def initialize(ctx)
@@ -51,9 +52,9 @@ module Tracetool
       end
     end
 
+    # launches atos
     class AtosLauncher
       def process(trace, context)
-
         desym = run_atos(context, trace.map(&:first))
         # Add useful columns to unpacked trace
         #

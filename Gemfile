@@ -5,7 +5,7 @@ group :main do
 end
 
 group :dev do
-  gem 'rubocop', '~> 0.51.0'
   gem 'rspec'
+  gem 'rubocop', '~> 0.51.0'
   gem 'yard'
 end

@@ -1,6 +1,8 @@
 require 'open3'
 module Tracetool
+  # helper module for launching commands
   module Pipe
+    # Executes shell command
     class Executor
       def initialize(cmd, *args)
         @cmd = cmd
