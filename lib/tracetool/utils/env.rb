@@ -9,7 +9,7 @@ module Tracetool
           exts.map { |ext| File.join(path, "#{cmd}#{ext}") }
         end
 
-        candidates.find {|exe| File.executable?(exe) && !File.directory?(exe)}
+        candidates.find { |exe| File.executable?(exe) && !File.directory?(exe) }
       end
 
       # Raises exception if can't find executable in path
