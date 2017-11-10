@@ -1,5 +1,7 @@
 # Tracetool
 
+[![Build Status](https://travis-ci.org/vizor-games/tracetool.svg?branch=master)](https://travis-ci.org/vizor-games/tracetool)
+
 ## Synopsis
 
 `tracetool` is a tiny tool that makes easier process of desymbolication Android and iOS crash reports.
