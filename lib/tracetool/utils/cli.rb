@@ -5,6 +5,8 @@ require 'ostruct'
 module Tracetool
   # Tracetool cli args parser
   class ParseArgs
+    # List of supported abis
+    ARCH_LIST = %i[armeabi-v7a armeabi x86 arm64 x86_64].freeze
     #
     # Return a structure describing the options.
     #
@@ -13,30 +15,27 @@ module Tracetool
       # We set default values here.
       opt_parser = ParseArgs.new(OpenStruct.new(sym_dir: Dir.pwd))
       options = opt_parser.parse(args)
-      check(options, opt_parser.help)
-      check_ios(options, opt_parser.help)
+      check(options)
+      check_ios(options)
       options
+    rescue OptionParser::MissingArgument => x
+      puts ["Error occurred: #{x.message}", '', opt_parser.help].join("\n")
+      exit 2
     end
 
-    def self.check_ios(options, message)
+    def self.check_ios(options)
       return unless options.platform == :ios
       {
         'address' => options.address,
         'modulename' =>  options.modulename
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
-    rescue OptionParser::MissingArgument => x
-      puts ["Error occured: #{x.message}", '', message].join("\n")
-      exit 2
     end
 
-    def self.check(options, message)
+    def self.check(options)
       {
         'platform' => options.platform,
         'arch' => options.arch
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
-    rescue OptionParser::MissingArgument => x
-      puts ["Error occured: #{x.message}", '', message].join("\n")
-      exit 2
     end
 
     def initialize(defaults)
@@ -72,7 +71,7 @@ module Tracetool
     def opt_common(opts)
       opts.separator 'Common options:'
       # Specify arch
-      opts.on('--arch ARCH', %i[armeabi-v7a armeabi x86 arm64], 'Specify arch (armeabi-v7a, x86, arm64)') do |arch|
+      opts.on('--arch ARCH', ARCH_LIST, "Specify arch #{ARCH_LIST.join}") do |arch|
         @options.arch = arch
       end
 

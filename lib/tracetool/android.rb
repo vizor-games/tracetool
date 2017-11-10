@@ -22,7 +22,7 @@ module Tracetool
 
     class << self
       # Desymbolicate android stack trace
-      def desym(string, opts = {})
+      def scan(string, opts = {})
         AndroidTraceScanner.process(string, opts)
       end
     end
