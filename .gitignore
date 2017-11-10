@@ -1,2 +1,6 @@
 # ignore intellij idea workspace
 .idea/workspace.xml 
+# Documentation is generated
+doc/**/* 
+# Ignore yard working files
+.yardoc

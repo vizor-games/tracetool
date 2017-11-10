@@ -16,3 +16,8 @@ task :default => :check
 
 desc 'Run tests and linter'
 task :check => %i[rspec lint]
+
+desc 'Generate documentation'
+task :doc do
+  puts `yard --doc`
+end

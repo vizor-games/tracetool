@@ -1,0 +1,33 @@
+Style/AsciiComments:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'test/**/*.rb'
+    - 'spec/**/*.rb'
+
+Style/HashSyntax:
+  Exclude:
+    # for task :foo => :bar definitions
+    - '**/Rakefile'
+    - '**/*.rake'
+    - '**/*.rake.rb'
+
+Security/MarshalLoad:
+  Exclude:
+    - 'lib/mbuild/core/job.rb'
+
+# bug in rubocop style checker
+Lint/InterpolationCheck:
+  Exclude:
+    - 'spec/mbuild/core/configuration_spec.rb'
+
+Eval:
+  Exclude:
+    # Allow eval for configuration values evaluation
+    - 'lib/mbuild/core/configuration.rb'

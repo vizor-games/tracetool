@@ -42,7 +42,7 @@ module Tracetool
       # * binary name
       # * address
       # @param [String] trace string containing stack trace
-      # @returns [Array] containing (%binary_name%, %address%) pairs
+      # @return [Array] containing (%binary_name%, %address%) pairs
       def parse(trace)
         trace.split("\n").map do |line|
           line.split(' ')[1..2] # Fetch binary name and address
