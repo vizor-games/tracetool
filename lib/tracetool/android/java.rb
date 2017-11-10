@@ -25,7 +25,7 @@ module Tracetool
         end
 
         def [](string)
-          return new(string) if match(string)
+          new(string) if match(string)
         end
       end
     end

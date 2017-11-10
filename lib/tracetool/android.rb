@@ -1,8 +1,5 @@
-require_relative 'android/java/scanner'
-require_relative 'android/java/parser'
-
-require_relative 'android/native/scanner'
-require_relative 'android/native/parser'
+require_relative 'android/java'
+require_relative 'android/native'
 
 # Tracetool root module
 module Tracetool

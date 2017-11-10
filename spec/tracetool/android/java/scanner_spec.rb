@@ -1,4 +1,4 @@
-require_relative lib('tracetool/android/java/scanner')
+require_relative lib('tracetool/android/java')
 
 describe Tracetool::Android::JavaTraceScanner do
   describe '#match' do

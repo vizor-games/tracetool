@@ -1,4 +1,4 @@
-require_relative lib('tracetool/android/native/scanner')
+require_relative lib('tracetool/android/native')
 
 describe Tracetool::Android::NativeTraceScanner do
   let(:scanner) { Tracetool::Android::NativeTraceScanner }

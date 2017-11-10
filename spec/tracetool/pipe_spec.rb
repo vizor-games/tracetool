@@ -1,4 +1,4 @@
-require_relative lib('tracetool/pipe')
+require_relative lib('tracetool/utils/pipe')
 
 describe Tracetool::Pipe do
   context 'simple cat' do

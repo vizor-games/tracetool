@@ -3,14 +3,14 @@ module Tracetool
   class BaseTraceParser
     attr_reader :entry_pattern, :call_pattern
 
-    def initialize(entry_pattern, call_pattern, build_dir)
-      @build_dir = build_dir
+    def initialize(entry_pattern, call_pattern, build_files)
+      @build_files = build_files
       @entry_pattern = entry_pattern
       @call_pattern = call_pattern
     end
 
     # Parse crash dump
-    # Each line should be barsed in Hash which SHOULD or MAY contains following
+    # Each line should be parsed in Hash which SHOULD or MAY contains following
     # entries:
     #
     # * SHOULD contain `orig` entry -- original trace entry
@@ -27,8 +27,8 @@ module Tracetool
         .split("\n")
         .select { |line| line_filter(line) }
         .map do |line|
-          scan_call(scan_line(line))
-        end
+        scan_call(scan_line(line))
+      end
     end
 
     private
@@ -38,7 +38,7 @@ module Tracetool
       entry_pattern.match(line)
     end
 
-    # Find basic etnry elements:
+    # Find basic entry elements:
     # * frame
     # * address
     # * library
@@ -75,45 +75,20 @@ module Tracetool
       # Find all matching files
       # remove build_dir from path
       # remove leading '/'
-      glob = File.join(@build_dir, '**', File.basename(file))
-      files = Dir[glob].map { |f| f.gsub(@build_dir, '').gsub(%r{^/}, '') }
+      glob = File.join('**', File.basename(file))
+      files = @build_files.select { |f| File.fnmatch(glob, f) }
 
       # If has only option return first
       return files.first if files.size == 1
       # Return original file if files empty
       return file if files.empty?
 
-      # If got ambigous files return all
+      # If got ambiguous files return all
       files
     end
 
     def extract_groups(match)
       Hash[*match.names.flat_map { |name| [name.to_sym, match[name]] }]
-    end
-  end
-
-  # Android traces scanner and mapper
-  class AndroidTraceParser < BaseTraceParser
-    # Describes android stack entry
-    STACK_ENTRY_PATTERN =
-      %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\.-]+)(: (?<call_description>.+))?$}
-    # Describes android native method call (class::method and source file with line number)
-    CALL_PATTERN = /(Routine )?(?<method>.+) at (?<file>.+):(?<line>\d+)/
-
-    def initialize(build_dir)
-      super(STACK_ENTRY_PATTERN, CALL_PATTERN, build_dir)
-    end
-  end
-
-  # IOS traces scanner and source mapper
-  class IOSTraceParser < BaseTraceParser
-    # Describes IOS stack entry
-    STACK_ENTRY_PATTERN = /^#(\s+)?(?<frame>\d+) (?<lib>.+) :: (?<call_description>.+)$/
-    # Describes source block
-    SOURCE_PATTERN = /^((?<method>.+) \(in (?<lib>.+)\) \((?<file>.+):(?<line>\d+)\))|(?<other>.+)$/
-
-    def initialize(build_dir)
-      super(STACK_ENTRY_PATTERN, SOURCE_PATTERN, build_dir)
     end
   end
 end
