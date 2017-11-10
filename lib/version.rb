@@ -1,3 +1,3 @@
 module Tracetool
-  Version = [0, 2, 1].freeze
+  Version = [0, 3, 0].freeze
 end
