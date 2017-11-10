@@ -5,12 +5,13 @@ module Tracetool
     # IOS traces scanner and source mapper
     class IOSTraceParser < Tracetool::BaseTraceParser
       # Describes IOS stack entry
-      STACK_ENTRY_PATTERN = /^#(\s+)?(?<frame>\d+) (?<lib>.+) :: (?<call_description>.+)$/
+      STACK_ENTRY_PATTERN = /^(?<frame>\d+) (?<binary>[^ ]+) (?<call_description>.+)$/
       # Describes source block
-      SOURCE_PATTERN = /^((?<method>.+) \(in (?<lib>.+)\) \((?<file>.+):(?<line>\d+)\))|(?<other>.+)$/
+      SOURCE_PATTERN =
+        /^((-?\[(?<class>[^ ]+) (?<method>.+)\])|(?<method>.+)) \(in (?<module>.+)\) \((?<file>.+):(?<line>\d+)\)$/
 
       def initialize(files)
-        super(STACK_ENTRY_PATTERN, SOURCE_PATTERN, files)
+        super(STACK_ENTRY_PATTERN, SOURCE_PATTERN, files, true)
       end
     end
   end
