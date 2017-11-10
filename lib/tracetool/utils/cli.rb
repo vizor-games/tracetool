@@ -71,7 +71,7 @@ module Tracetool
     def opt_common(opts)
       opts.separator 'Common options:'
       # Specify arch
-      opts.on('--arch ARCH', ARCH_LIST, "Specify arch #{ARCH_LIST.join}") do |arch|
+      opts.on('--arch ARCH', ARCH_LIST, "Specify arch #{ARCH_LIST.join(', ')}") do |arch|
         @options.arch = arch
       end
 

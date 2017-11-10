@@ -19,5 +19,5 @@ task :check => %i[rspec lint]
 
 desc 'Generate documentation'
 task :doc do
-  puts `yard --doc`
+  puts `yard --doc - Readme.md Changelog.md`
 end

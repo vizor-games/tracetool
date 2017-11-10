@@ -16,14 +16,14 @@ module Tracetool
         # Find scanner which maches trace format
         scanner = SCANNERS.map { |s| s[trace] }.compact.first
         raise(ArgumentError, "#{trace}\n not android trace?") unless scanner
-        scanner.process(*context)
+        scanner.process(context)
       end
     end
 
     class << self
       # Desymbolicate android stack trace
       def scan(string, opts = {})
-        AndroidTraceScanner.process(string, opts)
+        AndroidTraceScanner.new .process(string, OpenStruct.new(opts))
       end
     end
   end

@@ -96,7 +96,13 @@ module Tracetool
       #   path to symbols dir
       # @return [String] desymbolicated stack trace
       def process(ctx)
-        Pipe['ndk-stack', '-sym', ctx.symbols] << @trace
+        symbols = File.join(ctx.symbols, 'local')
+        if ctx.arch
+          symbols = File.join(symbols, ctx.arch)
+        else
+          symbols = Dir[File.join(symbols, '*')].first
+        end
+        Pipe['ndk-stack', '-sym', symbols] << @trace
       end
 
       class << self

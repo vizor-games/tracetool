@@ -11,17 +11,18 @@ opts = Tracetool::ParseArgs.parse(ARGV)
 
 case opts.platform
   when :android
-    ARGF.read.split("\n").each do |stack|
-      puts Tracetool::Android.scan(stack, symbols: opts.sym_dir)
-    end
+    stack = ARGF.read
+    puts Tracetool::Android.scan(stack,
+                                 symbols: opts.sym_dir,
+                                 arch: opts.arch.to_s
+    )
   when :ios
-    ARGF.read.split("\n").each do |stack|
-      puts Tracetool::IOS.scan(stack,
-                               arch: opts.arch.to_s,
-                               xarchive: opts.sym_dir,
-                               module_name: opts.modulename,
-                               load_address: opts.address)
-    end
+    stack = ARGF.read
+    puts Tracetool::IOS.scan(stack,
+                             arch: opts.arch.to_s,
+                             xarchive: opts.sym_dir,
+                             module_name: opts.modulename,
+                             load_address: opts.address)
   else
     raise "Unknown(#{opts.platform})"
 end
