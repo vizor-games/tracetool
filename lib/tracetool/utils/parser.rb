@@ -3,10 +3,11 @@ module Tracetool
   class BaseTraceParser
     attr_reader :entry_pattern, :call_pattern
 
-    def initialize(entry_pattern, call_pattern, build_files)
+    def initialize(entry_pattern, call_pattern, build_files, convert_numbers = false)
       @build_files = build_files
       @entry_pattern = entry_pattern
       @call_pattern = call_pattern
+      @convert_numbers = convert_numbers
     end
 
     # Parse crash dump
@@ -26,9 +27,7 @@ module Tracetool
       lines
         .split("\n")
         .select { |line| line_filter(line) }
-        .map do |line|
-        scan_call(scan_line(line))
-      end
+        .map { |line| scan_call(scan_line(line)) }
     end
 
     private
@@ -88,7 +87,18 @@ module Tracetool
     end
 
     def extract_groups(match)
-      Hash[*match.names.flat_map { |name| [name.to_sym, match[name]] }]
+      groups = match
+               .names
+               .map { |name| [name.to_sym, match[name]] }
+               .flat_map { |name, value| [name, try_convert(value)] }
+      Hash[*groups]
+    end
+
+    def try_convert(value)
+      return value unless @convert_numbers
+      return value.to_i if /^\d+$/ =~ value
+
+      value
     end
   end
 end
