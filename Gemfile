@@ -7,5 +7,6 @@ end
 group :dev do
   gem 'rspec'
   gem 'rubocop', '~> 0.51.0'
+  gem 'simplecov', '0.13.0', require: false
   gem 'yard'
 end

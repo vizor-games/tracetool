@@ -7,3 +7,6 @@ doc/**/*
 
 # ignore built gems
 tracetool-*.gem
+
+# ignore coverage 
+coverage
