@@ -3,6 +3,7 @@ require 'tmpdir'
 require 'ostruct'
 
 require_relative 'helpers/parser'
+require_relative '../lib/tracetool/utils/env'
 
 def lib(path)
   File.join(File.dirname(__FILE__), '../lib', path)

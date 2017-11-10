@@ -122,7 +122,13 @@ describe Tracetool::Android::NativeTraceScanner do
   end
 
   describe '#process' do
-    it 'pipes stack trace through ndk-stack' do
+    skip_ndk_stack = if Tracetool::Env.which('ndk-stack')
+                       false
+                     else
+                       'No ndk-stack found'
+                     end
+
+    it 'pipes stack trace through ndk-stack', skip: skip_ndk_stack do
       original =  <<-TRACE.strip_indent
       *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
       Build fingerprint: UNKNOWN
