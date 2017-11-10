@@ -77,10 +77,11 @@ module Tracetool
         @trace = string
       end
 
-      # @param [String] symbols path containing native symbols
+      # @param [OpenStruct] ctx context object containing `symbols` field with
+      #   path to symbols dir
       # @return [String] desymbolicated stack trace
-      def process(symbols:)
-        Pipe['ndk-stack', '-sym', symbols] << @trace
+      def process(ctx)
+        Pipe['ndk-stack', '-sym', ctx.symbols] << @trace
       end
 
       class << self
@@ -121,11 +122,11 @@ module Tracetool
         # @return [NativeTraceScanner] or nil
         def [](string)
           if packed? string
-            NativeTraceScanner.new(unpack(string))
+            new(unpack(string))
           elsif with_header? string
-            NativeTraceScanner.new(string)
+            new(string)
           elsif without_header? string
-            NativeTraceScanner.new(add_header(string))
+            new(add_header(string))
           end
         end
       end

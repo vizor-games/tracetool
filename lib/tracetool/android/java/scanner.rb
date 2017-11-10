@@ -5,6 +5,14 @@ module Tracetool
       RX_FIRST_EXCEPTION_LINE = /^.+$/
       RX_OTHER_EXCEPTION_LINE = /at [^(]+\(([^:]+:\d+)|(Native Method)\)$/
 
+      def initialize(string)
+        @trace = string
+      end
+
+      def process(_ctx)
+        @trace
+      end
+
       class << self
         def match(string)
           # Split into lines
@@ -14,6 +22,10 @@ module Tracetool
           return unless RX_FIRST_EXCEPTION_LINE.match(first)
 
           rest.all? { |line| RX_OTHER_EXCEPTION_LINE.match(line) }
+        end
+
+        def [](string)
+          return new(string) if match(string)
         end
       end
     end
