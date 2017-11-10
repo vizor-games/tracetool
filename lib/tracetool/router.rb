@@ -117,9 +117,7 @@ module Tracetool
   # Parses string with ios stack trace and routes
   # it to proper handler
   class IOSRouter < Router
-    ROUTES = {
-      /.+/ => :ios
-    }.freeze
+    ROUTES = { /.+/ => :ios }.freeze
 
     # Generate sugar methods
     ROUTES.each_value do |v|

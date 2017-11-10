@@ -1,3 +1,9 @@
+require_relative 'android/java/scanner'
+require_relative 'android/java/parser'
+
+require_relative 'android/native/scanner'
+require_relative 'android/native/parser'
+
 # Tracetool root module
 module Tracetool
   # Android trace scan variant
@@ -63,6 +69,33 @@ module Tracetool
 
     def process(trace, ctx, *queue)
       queue.inject(trace) { |acc, elem| elem.process(acc, ctx) }
+    end
+
+    # Desymbolicates android traces
+    class AndroidTraceScanner
+      # List of scanners
+      SCANNERS = [
+        JavaTraceScanner, NativeTraceScanner
+      ].freeze
+
+      def initialize(opts = {})
+        @ctx = opts
+      end
+
+      # Launches process of trace desymbolication
+      # @param [String] trace trace body
+      def process(trace, context)
+        # Find scanner which maches trace format
+        scanner_class = SCANNERS.find { |s| s.match(trace) }
+        scanner_class.new.process(trace, context)
+      end
+    end
+
+    class << self
+      # Desymbolicate android stack trace
+      def desym(string, opts = {})
+        AndroidTraceScanner.process(string, OpenStruct.new(opts))
+      end
     end
   end
 end
