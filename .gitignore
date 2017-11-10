@@ -4,3 +4,6 @@
 doc/**/* 
 # Ignore yard working files
 .yardoc
+
+# ignore built gems
+tracetool-*.gem
