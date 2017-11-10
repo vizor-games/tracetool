@@ -106,12 +106,12 @@ In iOS mode `tracetool` recognizes only thread stack trace format:
 
 ## Changelog
 
-See {file:Changelog.md} for a list of changes.
+See [Changelog.md](Changelog.md) for a list of changes.
 
 ## Roadmap 
 
-See {file:Roadmap.md} for a list of scheduled features and changes. 
+See [Roadmap.md](Roadmap.md) for a list of scheduled features and changes. 
 
 ## License
 
-tracetool is licensed under the MIT license. Please see the {file:LICENSE} for more information.
+tracetool is licensed under the MIT licence. Please see the [LICENCE](LICENCE) for more information.
