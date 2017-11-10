@@ -1,5 +1,7 @@
 # Tracetool
 
+[![Coverage Status](https://img.shields.io/codeclimate/coverage/github/vizor-games/tracetool.svg)](https://codeclimate.com/github/vizor-games/tracetool)
+[![Code Climate](https://codeclimate.com/github/vizor-games/tracetool/badges/gpa.svg)](https://codeclimate.com/github/vizor-games/tracetool)
 [![Build Status](https://travis-ci.org/vizor-games/tracetool.svg?branch=master)](https://travis-ci.org/vizor-games/tracetool)
 
 ## Synopsis
