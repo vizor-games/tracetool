@@ -1,5 +1,18 @@
+require_relative '../utils/parser'
+
 module Tracetool
   module Android
+    # Parses java stack traces
+    class JavaTraceParser < Tracetool::BaseTraceParser
+      # Describes java stack entry
+      STACK_ENTRY_PATTERN = /^(\s+at (?<call_description>.+))|((?<error>.+?): (?<message>.+))$/
+      # Describes java method call
+      CALL_PATTERN = /(?<class>.+)\.(?<method>[^\(]+)\((((?<file>.+\.java):(?<line>\d+))|(?<location>.+))\)$/
+
+      def initialize(files)
+        super(STACK_ENTRY_PATTERN, CALL_PATTERN, files, true)
+      end
+    end
     # Processes java traces
     class JavaTraceScanner
       RX_FIRST_EXCEPTION_LINE = /^.+$/
