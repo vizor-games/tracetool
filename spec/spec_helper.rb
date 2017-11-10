@@ -3,7 +3,7 @@ require 'tmpdir'
 require 'ostruct'
 require 'simplecov'
 
-# Run with coverage 
+# Run with coverage
 SimpleCov.start
 
 require_relative 'helpers/parser'
