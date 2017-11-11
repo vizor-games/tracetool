@@ -16,6 +16,14 @@ To install `tracetool`, use the following command:
 $ gem install tracetool
 ```
 
+Alternatively, if you've checked the source out directly, you can call 
+
+```sh
+rake gem:install
+```
+
+from the root project directory.
+
 ## Usage
 
 ### tracetool Command-line Tool
