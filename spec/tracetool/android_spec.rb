@@ -1,12 +1,12 @@
 require_relative lib('tracetool/android')
 
 describe Tracetool::Android::AndroidTraceScanner do
-  let(:scanner) { Tracetool::Android::AndroidTraceScanner.new }
+  let(:scanner) { Tracetool::Android }
 
   describe '#process' do
     context('when it not a trace') do
       it 'raises ArgumentError' do
-        expect { scanner.process('NOT A TRACE', {}) }
+        expect { scanner.scan('NOT A TRACE', {}) }
           .to raise_error(ArgumentError)
       end
     end
@@ -24,7 +24,7 @@ describe Tracetool::Android::AndroidTraceScanner do
 
       let(:ctx) { OpenStruct.new }
       it 'should unpack java' do
-        expect(scanner.process(trace, ctx)).to eq(trace)
+        expect(scanner.scan(trace, ctx)).to eq(trace)
       end
     end
 

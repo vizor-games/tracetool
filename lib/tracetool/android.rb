@@ -13,7 +13,7 @@ module Tracetool
       # Launches process of trace desymbolication
       # @param [String] trace trace body
       def process(trace, context)
-        # Find scanner which maches trace format
+        # Find scanner which matches trace format
         scanner = SCANNERS.map { |s| s[trace] }.compact.first
         raise(ArgumentError, "#{trace}\n not android trace?") unless scanner
         scanner.process(context)
@@ -23,7 +23,7 @@ module Tracetool
     class << self
       # Desymbolicate android stack trace
       def scan(string, opts = {})
-        AndroidTraceScanner.new .process(string, OpenStruct.new(opts))
+        AndroidTraceScanner.new.process(string, OpenStruct.new(opts))
       end
     end
   end
