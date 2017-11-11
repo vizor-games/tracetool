@@ -12,6 +12,8 @@ rescue LoadError => x
   task(:rspec) {}
 end
 
+require_relative 'lib/version'
+
 task :default => :check
 
 desc 'Run tests and linter'
@@ -20,4 +22,17 @@ task :check => %i[rspec lint]
 desc 'Generate documentation'
 task :doc do
   puts `yard --doc - Readme.md Changelog.md`
+end
+
+namespace :gem do
+  GEMNAME = "tracetool-#{Tracetool::Version}.gem".freeze
+  desc "Build #{GEMNAME}"
+  task :build => :check do
+    puts `gem build tracetool.gemspec`
+  end
+
+  desc "Install #{GEMNAME}"
+  task :install => :build do
+    puts `gem install #{GEMNAME}`
+  end
 end
