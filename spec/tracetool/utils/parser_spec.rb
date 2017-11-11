@@ -39,7 +39,7 @@ describe Tracetool::BaseTraceParser do
     end
 
     context 'when has file list' do
-      let(:files) { %w[com/foo/var.cpp com/bar/jar.cpp] }
+      let(:files) { %w[com/foo/var.cpp com/bar/jar.cpp com/far/jar.cpp] }
 
       let(:parser) do
         Tracetool::BaseTraceParser.new(entry_regexp, call_regexp, files)
@@ -48,6 +48,13 @@ describe Tracetool::BaseTraceParser do
       it 'resolves file group as file' do
         expect(parser.parse('A foo.so method var.cpp:10').first[:call][:file])
           .to eq('com/foo/var.cpp')
+      end
+
+      context 'when has ambiguous file name' do
+        it 'returns all matching files' do
+          expect(parser.parse('A foo.so method jar.cpp:10').first[:call][:file])
+            .to match_array(%w[com/bar/jar.cpp com/far/jar.cpp])
+        end
       end
     end
 
