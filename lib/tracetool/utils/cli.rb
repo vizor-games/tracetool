@@ -110,7 +110,7 @@ module Tracetool
 
       # Another typical switch to print the version.
       opts.on_tail('--version', 'Show version') do
-        puts 'tracetool ' + Tracetool::Version.join('.')
+        puts 'tracetool ' + Tracetool::Version.to_s
         exit
       end
     end
