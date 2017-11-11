@@ -1,6 +1,7 @@
 require 'optparse'
-require 'optparse/time'
 require 'ostruct'
+
+require_relative '../../version'
 
 module Tracetool
   # Tracetool cli args parser
@@ -10,24 +11,25 @@ module Tracetool
     #
     # Return a structure describing the options.
     #
-    def self.parse(args)
+    def self.parse(args, io = $stdout)
       # The options specified on the command line will be collected in *options*.
       # We set default values here.
-      opt_parser = ParseArgs.new(OpenStruct.new(sym_dir: Dir.pwd))
+      opt_parser = ParseArgs.new(OpenStruct.new(sym_dir: Dir.pwd), io)
       options = opt_parser.parse(args)
       check(options)
       check_ios(options)
       options
     rescue OptionParser::MissingArgument => x
-      puts ["Error occurred: #{x.message}", '', opt_parser.help].join("\n")
-      exit 2
+      io.write ["Error occurred: #{x.message}", '', opt_parser.help].join("\n")
+      io.write "\n"
+      raise(x)
     end
 
     def self.check_ios(options)
       return unless options.platform == :ios
       {
         'address' => options.address,
-        'modulename' =>  options.modulename
+        'module' =>  options.modulename
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
     end
 
@@ -38,17 +40,10 @@ module Tracetool
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
     end
 
-    def initialize(defaults)
+    def initialize(defaults, io)
+      @io = io
       @options = defaults
-      @opt_parser = OptionParser.new do |opts|
-        opt_banner(opts)
-        opts.separator ''
-        opt_common(opts)
-        opts.separator ''
-        opt_ios(opts)
-        opts.separator ''
-        opt_default(opts)
-      end
+      @opt_parser = gen_opt_parser
     end
 
     def parse(args)
@@ -58,6 +53,20 @@ module Tracetool
 
     def help
       @opt_parser.help
+    end
+
+    private
+
+    def gen_opt_parser
+      OptionParser.new do |opts|
+        opt_banner(opts)
+        opts.separator ''
+        opt_common(opts)
+        opts.separator ''
+        opt_ios(opts)
+        opts.separator ''
+        opt_default(opts)
+      end
     end
 
     def opt_banner(opts)
@@ -104,13 +113,14 @@ module Tracetool
       # No argument, shows at tail.  This will print an options summary.
       # Try it and see!
       opts.on_tail('-h', '--help', 'Show this message') do
-        puts opts
+        @io.write opts
+        @io.write "\n"
         exit
       end
 
       # Another typical switch to print the version.
       opts.on_tail('--version', 'Show version') do
-        puts 'tracetool ' + Tracetool::Version.to_s
+        @io.write 'tracetool ' + Tracetool::Version.to_s
         exit
       end
     end

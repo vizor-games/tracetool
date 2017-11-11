@@ -1,12 +1,14 @@
 require 'powerpack/string'
 require 'tmpdir'
 require 'ostruct'
-require 'simplecov'
 
+require_relative 'matchers/exit'
+require_relative 'helpers/parser'
+
+require 'simplecov'
 # Run with coverage
 SimpleCov.start
 
-require_relative 'helpers/parser'
 require_relative '../lib/tracetool/utils/env'
 
 def lib(path)
