@@ -38,6 +38,8 @@ describe Tracetool::Env do
       end
 
       it do
+        allow(ENV).to receive(:[]).with('PATH').and_return(@tmp_dir)
+        allow(ENV).to receive(:[]).with('PATHEXT').and_return(nil)
         expect { Tracetool::Env.ensure_ndk_stack }.to_not raise_error
       end
 
@@ -48,7 +50,8 @@ describe Tracetool::Env do
 
     context 'when ndk-stack not installed' do
       it do
-        allow(ENV).to receive(:[]).and_return('')
+        allow(ENV).to receive(:[]).with('PATH').and_return('')
+        allow(ENV).to receive(:[]).with('PATHEXT').and_return(nil)
         expect { Tracetool::Env.ensure_ndk_stack }.to raise_error(ArgumentError)
       end
     end
@@ -62,6 +65,8 @@ describe Tracetool::Env do
       end
 
       it do
+        allow(ENV).to receive(:[]).with('PATH').and_return(@tmp_dir)
+        allow(ENV).to receive(:[]).with('PATHEXT').and_return(nil)
         expect { Tracetool::Env.ensure_atos }.to_not raise_error
       end
 
@@ -72,7 +77,8 @@ describe Tracetool::Env do
 
     context 'when atos not installed' do
       it do
-        allow(ENV).to receive(:[]).and_return('')
+        allow(ENV).to receive(:[]).with('PATH').and_return('')
+        allow(ENV).to receive(:[]).with('PATHEXT').and_return(nil)
         expect { Tracetool::Env.ensure_atos }.to raise_error(ArgumentError)
       end
     end
