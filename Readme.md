@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/vizor-games/tracetool/badges/gpa.svg)](https://codeclimate.com/github/vizor-games/tracetool)
 [![Build Status](https://travis-ci.org/vizor-games/tracetool.svg?branch=master)](https://travis-ci.org/vizor-games/tracetool)
 
+[![Gem](https://img.shields.io/gem/v/tracetool.svg)](https://rubygems.org/gems/tracetool)
 ## Synopsis
 
 `tracetool` is a tiny tool that makes easier process of desymbolication Android and iOS crash reports.
