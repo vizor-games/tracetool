@@ -49,7 +49,7 @@ describe Tracetool::Android::NativeTraceScanner do
             native: pc 0000000000c35865  base.odex
         TRACE
       end
-      it 'should match' do
+      it do
         expect(scanner.without_header?(trace)).to be_truthy
       end
     end
@@ -63,7 +63,7 @@ describe Tracetool::Android::NativeTraceScanner do
             #00 pc 0000000000c35865  base.odex
         TRACE
       end
-      it 'should match' do
+      it do
         expect(scanner.without_header?(trace)).to be_truthy
       end
     end
@@ -93,7 +93,7 @@ describe Tracetool::Android::NativeTraceScanner do
         TRACE
       end
 
-      it 'should match' do
+      it do
         expect(scanner.with_header?(trace)).to be_truthy
       end
     end
@@ -128,8 +128,8 @@ describe Tracetool::Android::NativeTraceScanner do
                        'No ndk-stack found'
                      end
 
-    it 'pipes stack trace through ndk-stack', skip: skip_ndk_stack do
-      original =  <<-TRACE.strip_indent
+    let(:trace) do
+      <<-TRACE.strip_indent
       *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
       Build fingerprint: UNKNOWN
       pid: 0, tid: 0
@@ -143,7 +143,9 @@ describe Tracetool::Android::NativeTraceScanner do
                #05  pc 00008458  /data/local/ndk-tests/crasher
                #06  pc 0000d362  /system/lib/libc.so
       TRACE
+    end
 
+    it 'pipes stack trace through ndk-stack', skip: skip_ndk_stack do
       expect = <<-TRACE.strip_indent.chomp
       ********** Crash dump: **********
       Build fingerprint: UNKNOWN
@@ -160,7 +162,45 @@ describe Tracetool::Android::NativeTraceScanner do
 
       Dir.mktmpdir do |dir|
         ctx = OpenStruct.new(symbols: dir)
-        expect(scanner.new(original).process(ctx)).to eq(expect)
+        expect(scanner.new(trace).process(ctx)).to eq(expect)
+      end
+    end
+
+    context 'when context has arch and symbols' do
+      let(:exec) { double }
+      before do
+        expect(Tracetool::Pipe::Executor)
+          .to receive(:new)
+          .with('ndk-stack', %w[-sym /tmp/symbols/local/arch])
+          .and_return(exec)
+        allow(exec).to receive(:<<).and_return('native')
+      end
+
+      it do
+        ctx = OpenStruct.new(symbols: '/tmp/symbols', arch: 'arch')
+        expect(scanner.new(trace).process(ctx)).to eq('native')
+      end
+    end
+
+    context 'when context has only symbols' do
+      let(:exec) { double }
+      before do
+        @tmp_dir = Dir.mktmpdir
+        FileUtils.mkdir_p(File.join(@tmp_dir, 'local/arch'))
+        expect(Tracetool::Pipe::Executor)
+          .to receive(:new)
+          .with('ndk-stack', ['-sym', File.join(@tmp_dir, 'local/arch')])
+          .and_return(exec)
+        allow(exec).to receive(:<<).and_return('native')
+      end
+
+      it do
+        ctx = OpenStruct.new(symbols: @tmp_dir)
+        expect(scanner.new(trace).process(ctx)).to eq('native')
+      end
+
+      after do
+        FileUtils.remove_entry @tmp_dir
       end
     end
   end
@@ -173,12 +213,12 @@ describe Tracetool::Android::NativeTraceEnhancer do
   describe '#unpack' do
     it 'should convert packed trace to ndk trace' do
       unpacked = <<-NDK.strip_indent.chomp
-    *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-    Build fingerprint: UNKNOWN
-    pid: 0, tid: 0
-    signal 0 (UNKNOWN)
-    backtrace:
-        #00  pc 000004d2  lib.so
+      *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+      Build fingerprint: UNKNOWN
+      pid: 0, tid: 0
+      signal 0 (UNKNOWN)
+      backtrace:
+          #00  pc 000004d2  lib.so
       NDK
       expect(enhancer.unpack('<<<1234 lib.so ;>>>')).to eq(unpacked)
     end

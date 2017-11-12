@@ -108,13 +108,6 @@ module Tracetool
       class << self
         # Add methods for trace normalization
         include Tracetool::Android::NativeTraceEnhancer
-        # Tells if provided string is a ndk trace
-        # @return truthy or falsey value
-        def match(string)
-          return false if string.empty?
-          packed?(string) || with_header?(string) || without_header?(string)
-        end
-
         def packed?(string)
           RX_PACKED_FORMAT.match(string)
         end
