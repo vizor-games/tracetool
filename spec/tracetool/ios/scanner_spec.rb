@@ -1,6 +1,6 @@
 require_relative lib('tracetool/ios/scanner')
 describe Tracetool::IOS::IOSTraceScanner do
-  let(:parser) { Tracetool::IOS::IOSTraceScanner.new }
+  let(:scaner) { Tracetool::IOS::IOSTraceScanner.new }
 
   let(:trace) do
     <<-IOS_TRACE
@@ -40,7 +40,7 @@ describe Tracetool::IOS::IOSTraceScanner do
     EXPECT
   end
   it 'converts packed trace to atos compatible format' do
-    expect(parser.parse(trace)).to match_array(expected)
+    expect(scaner.parse(trace)).to match_array(expected)
   end
 end
 

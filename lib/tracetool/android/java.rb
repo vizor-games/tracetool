@@ -26,6 +26,14 @@ module Tracetool
         @trace
       end
 
+      # Create parser for current trace format
+      # @param [Array] files list of files used in build. This files are
+      #   used to match file entries from stack trace to real files
+      # @return [Tracetool::BaseTraceParser] parser that matches trace format
+      def parser(files)
+        JavaTraceParser.new(files)
+      end
+
       class << self
         def match(string)
           # Split into lines

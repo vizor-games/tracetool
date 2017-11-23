@@ -60,6 +60,14 @@ module Tracetool
         Pipe['atos', *AtosContext.new(context).to_args] << trace
       end
 
+      # Create parser for current trace format
+      # @param [Array] files list of files used in build. This files are
+      #   used to match file entries from stack trace to real files
+      # @return [Tracetool::BaseTraceParser] parser that matches trace format
+      def parser(files)
+        IOSTraceParser.new(files)
+      end
+
       private
 
       def mix(trace, symbolicated)
