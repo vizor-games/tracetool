@@ -1,6 +1,10 @@
 Metrics/LineLength:
   Max: 120
 
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*_spec.rb'
+
 Metrics/BlockLength:
   Exclude:
     - 'Rakefile'

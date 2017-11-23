@@ -1,8 +1,8 @@
 require_relative lib('tracetool/android/java')
 
-describe Tracetool::Android::JavaTraceScanner do
-  describe '#match' do
-    context 'when example java trace' do
+module Tracetool
+  module Android
+    describe JavaTraceScanner do
       let(:trace) do
         <<-JAVA.strip_indent
         java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
@@ -35,11 +35,21 @@ describe Tracetool::Android::JavaTraceScanner do
           at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1194)
         JAVA
       end
+      describe '#match' do
+        context 'when example java trace' do
+          let(:matcher) { JavaTraceScanner }
 
-      let(:matcher) { Tracetool::Android::JavaTraceScanner }
+          it 'should match java trace' do
+            expect(matcher.match(trace)).to be_truthy
+          end
+        end
+      end
 
-      it 'should match java trace' do
-        expect(matcher.match(trace)).to be_truthy
+      describe '#parser' do
+        it 'creates JavaTraceParser' do
+          expect(JavaTraceScanner.new(trace).parser([]))
+            .to be_a(JavaTraceParser)
+        end
       end
     end
   end

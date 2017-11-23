@@ -14,9 +14,18 @@ module Tracetool
       # @param [String] trace trace body
       def process(trace, context)
         # Find scanner which matches trace format
-        scanner = SCANNERS.map { |s| s[trace] }.compact.first
-        raise(ArgumentError, "#{trace}\n not android trace?") unless scanner
-        scanner.process(context)
+        @scanner = SCANNERS.map { |s| s[trace] }.compact.first
+        raise(ArgumentError, "#{trace}\n not android trace?") unless @scanner
+        @scanner.process(context)
+      end
+
+      # Creates parser for last unpacked trace
+      # @param [Array] files list of source files used in build
+      # @return [Tracetool::BaseTraceParser] parser that matches trace format.
+      #   Or `nil`. If there was no scanning.
+      def parser(files)
+        return unless @scanner
+        @scanner.parser(files)
       end
     end
 
