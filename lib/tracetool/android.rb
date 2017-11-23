@@ -21,8 +21,10 @@ module Tracetool
 
       # Creates parser for last unpacked trace
       # @param [Array] files list of source files used in build
-      # @return [Tracetool::BaseTraceParser] parser that matches trace format
+      # @return [Tracetool::BaseTraceParser] parser that matches trace format.
+      #   Or `nil`. If there was no scanning.
       def parser(files)
+        return unless @scanner
         @scanner.parser(files)
       end
     end
