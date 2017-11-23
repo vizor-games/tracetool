@@ -1,2 +1,2 @@
 #!/usr/bin/env ruby
-require_relative '../lib/tracetool'
+require_relative '../lib/tracetool_cli'
