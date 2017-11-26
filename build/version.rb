@@ -27,16 +27,11 @@ module Tracetool
       private
 
       def bump_version_array(version, major, minor, patch)
-        ma, mi, pa = version
-        if major != 0
-          bump_version_array([ma + major, 0, 0], 0, minor, patch)
-        elsif minor != 0
-          bump_version_array([ma, mi + minor, 0], 0, 0, patch)
-        elsif patch != 0
-          [ma, mi, pa + patch]
-        else
-          [ma, mi, pa]
-        end
+        version = [version[0] + major, 0, 0] if major > 0
+        version = [version[0], version[1] + minor, 0] if minor > 0
+        version = [version[0], version[1], version[2] + patch] if patch > 0
+
+        version
       end
     end
   end
