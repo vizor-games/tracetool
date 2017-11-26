@@ -39,9 +39,12 @@ namespace :gem do
 end
 
 namespace :version do
+  desc 'bump version. version=x,y,z to describe increment'
   task :bump do
     version = ENV['version'].split(',').map(&:to_i)
+    # Pad left with 0, so [1, 2] => [0, 1, 2]
+    version = [0] * [0, (3 - version.length)].max + version
     Tracetool::Build::Bumper.new('lib/version.rb')
-        .bump(major: version[0], minor: version[1], patch: version[2])
+                            .bump(major: version[0], minor: version[1], patch: version[2])
   end
 end
