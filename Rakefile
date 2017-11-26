@@ -29,10 +29,12 @@ namespace :gem do
   desc "Build #{GEMNAME}"
   task :build => :check do
     puts `gem build tracetool.gemspec`
+    FileUtils.mkdir_p '.out'
+    FileUtils.mv Dir['tracetool-*.gem'], '.out'
   end
 
   desc "Install #{GEMNAME}"
   task :install => :build do
-    puts `gem install #{GEMNAME}`
+    puts `gem install .out/#{GEMNAME}`
   end
 end
