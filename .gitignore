@@ -6,7 +6,8 @@ doc/**/*
 .yardoc
 
 # ignore built gems
-tracetool-*.gem
+.out
 
 # ignore coverage 
 coverage
+
