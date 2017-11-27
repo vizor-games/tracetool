@@ -3,7 +3,8 @@ require 'tmpdir'
 require 'ostruct'
 
 require 'simplecov'
-# Run with coverage
+require 'rspec/matchers/fail_matchers'
+
 SimpleCov.start
 
 require_relative 'matchers/exit'
@@ -21,4 +22,5 @@ end
 
 RSpec.configure do |c|
   c.include Helpers::NativeTraceParserHelper, helpers: :ndk
+  c.include RSpec::Matchers::FailMatchers, fail_matchers: true
 end
