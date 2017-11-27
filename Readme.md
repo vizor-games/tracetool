@@ -47,7 +47,7 @@ To process native Android stack trace you need to pass following CLI arguments:
 
 ##### Supported formats
 
-In Android mode `tracetool` supports several formats. Main purpose here is to asthmatically generate
+In Android mode `tracetool` supports several formats. Main purpose here is to automatically generate
 well-formed stack trace and pass it to `ndk-stack`
 
 * Plain logcat trace:
