@@ -1,3 +1,12 @@
+# Version 0.4.0
+
+* [#1](https://github.com/vizor-games/tracetool/pull/1) Made stack trace parser API usable.
+  * Moved CLI related logic from tracetool.rb to tracetool_cli
+  * `tracetool.rb` is now for requiring stuff all together
+  * `IOSTraceScanner`, `AndroidTraceScanner` are now having method `#parser` returning
+    appropriate parser instance matching stack trace format
+  * Test cases refactored to be less verbose.
+
 # Version 0.3.0 
 
 
