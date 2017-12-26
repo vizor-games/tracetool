@@ -1,6 +1,10 @@
+require_relative 'string'
+
 module Tracetool
   # Base trace parser logic
   class BaseTraceParser
+    include StringUtils
+
     attr_reader :entry_pattern, :call_pattern
 
     def initialize(entry_pattern, call_pattern, build_files, convert_numbers = false)
