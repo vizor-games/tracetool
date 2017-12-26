@@ -36,6 +36,11 @@ module Tracetool
               '<<<12345678 foo.so ;12345678 foo.so __bar 42;>>>'
             expect(NativeTraceScanner.packed?(trace)).to be_truthy
           end
+
+          it 'should match trace with signed address' do
+            trace = '<<<12345678 foo.so ;-13080997 foo.so ;12345678 foo.so __bar 42;>>>'
+            expect(NativeTraceScanner.packed?(trace)).to be_truthy
+          end
         end
       end
 
