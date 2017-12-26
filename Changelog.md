@@ -1,6 +1,8 @@
 # Added 
 
-*  Fixed false negative match for android native stacktraces with signed addresses
+* Fixed false negative match for android native stacktraces with signed addresses
+* When parsing unpacked stack trace with multiple source files matched choose files with longest common postfix
+  with original file. 
  
 # Version 0.4.0
 

@@ -69,21 +69,37 @@ module Tracetool
     end
 
     # Find file with specified file name in symbols dir
-    # Can return multiple files if name was ambigous
+    # Can return multiple files if name was ambiguous
     def find_file(file)
-      # Find all matching files
-      # remove build_dir from path
-      # remove leading '/'
-      glob = File.join('**', File.basename(file))
-      files = @build_files.select { |f| File.fnmatch(glob, f) }
+      # Find all files with same basename
+      filename = File.basename(file)
+      files = @build_files.select { |f| f.end_with?(filename) }
+
+      if files.length > 1
+        # If got ambiguous files return all try to find closest match
+        files = find_closest_files(file, files)
+      end
 
       # If has only option return first
       return files.first if files.size == 1
       # Return original file if files empty
       return file if files.empty?
 
-      # If got ambiguous files return all
-      files
+      files # Return all files if many matched
+    end
+
+    # Select from candidates list such files
+    # that ends with maximum substring of file
+    # @param [String] file file path to match
+    # @param [Array<String>] candidates list of candidates path
+    # @return [Array<String>] list of files with maximum length matches
+    def find_closest_files(file, candidates)
+      scored = candidates
+               .map { |path| [file.longest_common_postfix(path).length, path] }
+               .sort_by { |score, _path| -score } # from max to min
+      max_score, _path = scored.first
+
+      scored.select { |score, _path| score == max_score }.map(&:last)
     end
 
     def extract_groups(match)
