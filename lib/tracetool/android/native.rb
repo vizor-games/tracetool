@@ -84,7 +84,7 @@ module Tracetool
       # ** symbol offset `/\d+/`
       #
       # Last two entries can be missing.
-      RX_PACKED_FORMAT = /^(<<<(\d+ [^ ]+ ([^ ]+ \d+)?;)+>>>)+$/
+      RX_PACKED_FORMAT = /^(<<<([-\d]+ [^ ]+ ([^ ]+ \d+)?;)+>>>)+$/
 
       # @param [String] string well formed native android stack trace
       # @see https://developer.android.com/ndk/guides/ndk-stack.html

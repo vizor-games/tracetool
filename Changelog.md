@@ -1,3 +1,7 @@
+# Added 
+
+*  Fixed false negative match for android native stacktraces with signed addresses
+ 
 # Version 0.4.0
 
 * [#1](https://github.com/vizor-games/tracetool/pull/1) Made stack trace parser API usable.
