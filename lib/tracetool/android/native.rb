@@ -6,7 +6,7 @@ module Tracetool
     class NativeTraceParser < Tracetool::BaseTraceParser
       # Describes android stack entry
       STACK_ENTRY_PATTERN =
-        %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\.-]+)( )?(: (?<call_description>.+))?$}
+        %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\.=-]+)( )?(: (?<call_description>.+))?$}
       # Describes android native method call (class::method and source file with line number)
       CALL_PATTERN = /(Routine )?(?<method>.+) ((in)|(at)) (?<file>.+):(?<line>\d+)/
 

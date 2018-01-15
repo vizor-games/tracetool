@@ -3,7 +3,8 @@
 * [#4](https://github.com/vizor-games/tracetool/pull/4) Fixed false negative match for android native stacktraces with signed addresses
 * [#5](https://github.com/vizor-games/tracetool/pull/5) When parsing unpacked stack trace with multiple source files matched choose files with longest common postfix
   with original file.
-* [#6](https://github.com/vizor-games/tracetool/pull/6) Fixed issue when ambiguous file names were resolved wrongly.   
+* [#6](https://github.com/vizor-games/tracetool/pull/6) Fixed issue when ambiguous file names were resolved wrongly.
+* Fixed issue when library path contained `=` symbol led `NativeTraceParser` to drop all lines.    
  
 # Version 0.4.0
 
