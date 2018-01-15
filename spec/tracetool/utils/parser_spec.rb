@@ -57,6 +57,14 @@ describe Tracetool::BaseTraceParser do
         end
       end
 
+      context 'when has files with same postfixes' do
+        let(:files) { %w[com/foobar.cpp com/bar.cpp] }
+        it 'returns best matching file' do
+          expect(parser.parse('A foo.so method bar.cpp:10').first[:call][:file])
+            .to eq('com/bar.cpp')
+        end
+      end
+
       context 'when has exact filename among other matching' do
         it 'returns correct path' do
           expect(parser.parse('A foo.so method bar/jar.cpp:10').first[:call][:file])

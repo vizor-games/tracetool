@@ -75,14 +75,11 @@ module Tracetool
     # Find file with specified file name in symbols dir
     # Can return multiple files if name was ambiguous
     def find_file(file)
-      # Find all files with same basename
-      filename = File.basename(file)
-      files = @build_files.select { |f| f.end_with?(filename) }
-
-      if files.length > 1
-        # If got ambiguous files return all try to find closest match
-        files = find_closest_files(file, files)
-      end
+      file_name = File.basename(file)
+      # Firstly we'll drop obvious mismatches where basename of file differs
+      candidates = @build_files.select { |path| File.basename(path) == file_name }
+      # In case when got ambiguous files return all try to find closest match
+      files = find_closest_files(file, candidates)
 
       # If has only option return first
       return files.first if files.size == 1
@@ -98,12 +95,25 @@ module Tracetool
     # @param [Array<String>] candidates list of candidates path
     # @return [Array<String>] list of files with maximum length matches
     def find_closest_files(file, candidates)
-      scored = candidates
-               .map { |path| [file.longest_common_postfix(path).length, path] }
-               .sort_by { |score, _path| -score } # from max to min
-      max_score, _path = scored.first
+      candidates.inject([[], 0]) do |acc, elem|
+        # Current element score is length of longest common postfix
+        elem_score = file.longest_common_postfix(elem).length
 
-      scored.select { |score, _path| score == max_score }.map(&:last)
+        # Unpack accumulator as (list_of_matched_files, max_score)
+        matched, score = acc
+        # Will update if only have better score
+        if elem_score >= score
+          # Current score more than last known score, so now
+          # we drop all previous results and replace them with
+          # current element
+          matched = [] if elem_score > score
+          score = elem_score
+          # Update list of matched
+          matched << elem
+        end
+
+        [matched, score]
+      end.first
     end
 
     def extract_groups(match)

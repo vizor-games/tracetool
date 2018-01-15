@@ -41,6 +41,11 @@ module Tracetool
             trace = '<<<12345678 foo.so ;-13080997 foo.so ;12345678 foo.so __bar 42;>>>'
             expect(NativeTraceScanner.packed?(trace)).to be_truthy
           end
+
+          it do
+            trace = '<<<305256 libc.so tgkill+12;294883 libc.so pthread_kill+34;121773 libc.so raise+10;>>>'
+            expect(NativeTraceScanner.packed?(trace)).to be_truthy
+          end
         end
       end
 
@@ -72,6 +77,25 @@ module Tracetool
             expect(NativeTraceScanner.without_header?(trace)).to be_truthy
           end
         end
+
+        context 'when in trace from google play console' do
+          let(:trace) do
+            <<-TRACE.strip_indent
+            #00  pc 000000000004a868  /system/lib/libc.so (tgkill+12)
+            #01  pc 0000000000047fe3  /system/lib/libc.so (pthread_kill+34)
+            #02  pc 000000000001dbad  /system/lib/libc.so (raise+10)
+            #03  pc 0000000000019321  /system/lib/libc.so (__libc_android_abort+34)
+            #04  pc 0000000000017388  /system/lib/libc.so (abort+4)
+            TRACE
+          end
+
+          it do
+            expect(NativeTraceScanner.without_header?(trace)).to be_truthy
+          end
+        end
+      end
+
+      describe '::without_header?' do
       end
 
       describe '::with_header?' do
