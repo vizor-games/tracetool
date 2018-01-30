@@ -3,41 +3,47 @@ require_relative lib('tracetool/android/java')
 module Tracetool
   module Android
     describe JavaTraceScanner do
-      let(:trace) do
-        <<-JAVA.strip_indent
-        java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
-          at java.lang.Thread.nativeCreate(Native Method)
-          at java.lang.Thread.start(Thread.java:1063)
-          at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
-          at java.util.concurrent.ThreadPoolExecutor.ensurePrestart(ThreadPoolExecutor.java:1553)
-          at java.util.concurrent.ScheduledThreadPoolExecutor.delayedExecute(ScheduledThreadPoolExecutor.java:306)
-          at java.util.concurrent.ScheduledThreadPoolExecutor.schedule(ScheduledThreadPoolExecutor.java:503)
-          at com.appsflyer.f.a(SourceFile:1170)
-          at com.appsflyer.f.b(SourceFile:862)
-          at com.appsflyer.m.a(SourceFile:17)
-          at com.appsflyer.f$1.a(SourceFile:297)
-          at com.appsflyer.t.onActivityResumed(SourceFile:140)
-          at android.app.Application.dispatchActivityResumed(Application.java:232)
-          at android.app.Activity.onResume(Activity.java:1299)
-          at com.vizor.mobile.android.NativeAndroidActivity.onResume(SourceFile:126)
-          at com.vizorapps.klondike.MainActivity.onResume(SourceFile:76)
-          at android.app.Instrumentation.callActivityOnResume(Instrumentation.java:1255)
-          at android.app.Activity.performResume(Activity.java:6495)
-          at android.app.ActivityThread.performResumeActivity(ActivityThread.java:3510)
-          at android.app.ActivityThread.handleResumeActivity(ActivityThread.java:3552)
-          at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1520)
-          at android.os.Handler.dispatchMessage(Handler.java:102)
-          at android.os.Looper.loop(Looper.java:145)
-          at android.app.ActivityThread.main(ActivityThread.java:6134)
-          at java.lang.reflect.Method.invoke(Native Method)
-          at java.lang.reflect.Method.invoke(Method.java:372)
-          at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:1399)
-          at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1194)
-        JAVA
-      end
       describe '#match' do
+        let(:matcher) { JavaTraceScanner }
         context 'when example java trace' do
-          let(:matcher) { JavaTraceScanner }
+          let(:trace) do
+            <<-JAVA.strip_indent
+            java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
+              at java.lang.Thread.nativeCreate(Native Method)
+              at java.lang.Thread.start(Thread.java:1063)
+              at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
+              at java.util.concurrent.ThreadPoolExecutor.ensurePrestart(ThreadPoolExecutor.java:1553)
+              at java.util.concurrent.ScheduledThreadPoolExecutor.delayedExecute(ScheduledThreadPoolExecutor.java:306)
+              at java.util.concurrent.ScheduledThreadPoolExecutor.schedule(ScheduledThreadPoolExecutor.java:503)
+            JAVA
+          end
+          it 'should match java trace' do
+            expect(matcher.match(trace)).to be_truthy
+          end
+        end
+
+        context 'when trace contains frames tagged with "Unknown source"' do
+          let(:trace) do
+            <<-JAVA.strip_indent
+            java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
+              at java.lang.Thread.nativeCreate(Native Method)
+              at java.lang.Thread.start(Thread.java:1063)
+              at com.google.android.zzv.zza(Unknown Source)
+              at com.google.android.internal.zzv.zzg(Unknown Source)
+            JAVA
+          end
+
+          it 'should match java trace' do
+            expect(matcher.match(trace)).to be_truthy
+          end
+        end
+
+        context 'when trace contains only message line' do
+          let(:trace) do
+            <<-JAVA.strip_indent
+            java.lang.SecurityException: META-INF/MANIFEST.MF has invalid digest for a.png in a.png
+            JAVA
+          end
 
           it 'should match java trace' do
             expect(matcher.match(trace)).to be_truthy
@@ -47,7 +53,7 @@ module Tracetool
 
       describe '#parser' do
         it 'creates JavaTraceParser' do
-          expect(JavaTraceScanner.new(trace).parser([]))
+          expect(JavaTraceScanner.new("java.lang.OutOfMemoryError: Try again\n").parser([]))
             .to be_a(JavaTraceParser)
         end
       end

@@ -1,11 +1,12 @@
-# Added 
+# New
 
+* Fix issue when java traces with (Unknown Source) tag were unmatched
 * [#4](https://github.com/vizor-games/tracetool/pull/4) Fixed false negative match for android native stacktraces with signed addresses
 * [#5](https://github.com/vizor-games/tracetool/pull/5) When parsing unpacked stack trace with multiple source files matched choose files with longest common postfix
   with original file.
 * [#6](https://github.com/vizor-games/tracetool/pull/6) Fixed issue when ambiguous file names were resolved wrongly.
-* Fixed issue when library path contained `=` symbol led `NativeTraceParser` to drop all lines.    
- 
+* Fixed issue when library path contained `=` symbol led `NativeTraceParser` to drop all lines.
+
 # Version 0.4.0
 
 * [#1](https://github.com/vizor-games/tracetool/pull/1) Made stack trace parser API usable.
@@ -15,11 +16,11 @@
     appropriate parser instance matching stack trace format
   * Test cases refactored to be less verbose.
 
-# Version 0.3.0 
+# Version 0.3.0
 
 
-## Added 
+## Added
 
 * iOS crash desymbolication
 * Android native crash desymbolication
-* Android Native, Android Java and iOS desymbolicated crashes parsing API 
+* Android Native, Android Java and iOS desymbolicated crashes parsing API

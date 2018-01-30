@@ -15,8 +15,13 @@ module Tracetool
     end
     # Processes java traces
     class JavaTraceScanner
-      RX_FIRST_EXCEPTION_LINE = /^.+$/
-      RX_OTHER_EXCEPTION_LINE = /at [^(]+\(([^:]+:\d+)|(Native Method)\)$/
+      # Usually java trace starts with
+      #   com.something.SomeClass: Some message
+      RX_FIRST_EXCEPTION_LINE = /^(.*):(.*)$/
+      # Rest is expanded as
+      #   at com.other.OtherClass.someMethod(OtherClass.java:42)
+      # Source marker can be just "Native Method" or "Unknown Source"
+      RX_OTHER_EXCEPTION_LINE = /at [^(]+\((([^:]+:\d+)|(Unknown Source))|(Native Method)\)$/
 
       def initialize(string)
         @trace = string
@@ -38,10 +43,7 @@ module Tracetool
         def match(string)
           # Split into lines
           first, *rest = string.split("\n")
-
-          return if rest.nil? || rest.empty?
           return unless RX_FIRST_EXCEPTION_LINE.match(first)
-
           rest.all? { |line| RX_OTHER_EXCEPTION_LINE.match(line) }
         end
 
