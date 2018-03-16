@@ -10,7 +10,7 @@ module Tracetool
     def initialize(entry_pattern, call_pattern, build_files, convert_numbers = false)
       @build_files = build_files
       @entry_pattern = entry_pattern
-      @call_pattern = call_pattern
+      @call_pattern = call_pattern.is_a?(Array) ? call_pattern : [call_pattern]
       @convert_numbers = convert_numbers
     end
 
@@ -59,14 +59,15 @@ module Tracetool
     # * file
     # * line number
     def scan_call(e)
-      if e[:call_description]
-        call_pattern.match(e[:call_description]) do |m|
-          call = extract_groups(m)
-          # Update file entry with expanded path
-          call[:file] = find_file(call[:file]) if call[:file]
+      call_description = e[:call_description]
+      # TODO: Lazy check
+      match = call_description && call_pattern.map { |p| p.match(call_description) }.compact.first
+      if match
+        call = extract_groups(match)
+        # Update file entry with expanded path
+        call[:file] = find_file(call[:file]) if call[:file]
 
-          e[:call] = call
-        end
+        e[:call] = call
       end
 
       e

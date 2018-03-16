@@ -5,10 +5,10 @@ module Tracetool
     describe NativeTraceParser, helpers: :ndk do
       let(:files) do
         <<-FILES.strip_indent.split("\n")
-    foo/foo.cpp
-    foo/foo.h
-    bar/bar.cpp
-    bar/bar.h
+        foo/foo.cpp
+        foo/foo.h
+        bar/bar.cpp
+        bar/bar.h
         FILES
       end
 
@@ -83,6 +83,27 @@ module Tracetool
             lib: '/data/app/com.test-RCFoNTyJmrpi2PRV_uWa4Q==/lib/arm/test.so',
             orig: crash.split("\n").first
           }
+          expect(parser.parse(crash).first).to eq(e)
+        end
+      end
+
+      context 'when line contains address shift at the end' do
+        let(:crash) do
+          <<-CRASH.strip_indent
+          Stack frame #05  pc 001faed4  /system/vendor/lib/egl/libGLESv2_adreno.so _ZN10A5xContext20WriteTexSamplersRegsEPjii 595
+          CRASH
+        end
+
+        it do
+          e = {
+            address: 'pc 001faed4',
+            call: { method: '_ZN10A5xContext20WriteTexSamplersRegsEPjii' },
+            call_description: '_ZN10A5xContext20WriteTexSamplersRegsEPjii 595',
+            frame: 5,
+            lib: '/system/vendor/lib/egl/libGLESv2_adreno.so',
+            orig: crash.chomp
+          }
+
           expect(parser.parse(crash).first).to eq(e)
         end
       end
