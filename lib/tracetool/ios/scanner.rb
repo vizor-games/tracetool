@@ -8,7 +8,6 @@ module Tracetool
       # List of required argument names
       REQUIRED_ARGUMENTS = %i[load_address xarchive module_name].freeze
 
-      #
       def initialize(ctx)
         check_arguments(ctx)
         @load_address = ctx.load_address

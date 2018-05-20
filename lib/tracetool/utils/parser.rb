@@ -58,8 +58,8 @@ module Tracetool
     # * method
     # * file
     # * line number
-    def scan_call(e)
-      call_description = e[:call_description]
+    def scan_call(call_info)
+      call_description = call_info[:call_description]
       # TODO: Lazy check
       match = call_description && call_pattern.map { |p| p.match(call_description) }.compact.first
       if match
@@ -67,10 +67,10 @@ module Tracetool
         # Update file entry with expanded path
         call[:file] = find_file(call[:file]) if call[:file]
 
-        e[:call] = call
+        call_info[:call] = call
       end
 
-      e
+      call_info
     end
 
     # Find file with specified file name in symbols dir
