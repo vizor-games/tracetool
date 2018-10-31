@@ -18,7 +18,7 @@ module Tracetool
               at java.lang.Thread.start(Thread.java:1063)
               at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
               at java.util.concurrent.ThreadPoolExecutor.ensurePrestart(ThreadPoolExecutor.java:1553)
-            JAVA
+          JAVA
         end
 
         let(:ctx) { OpenStruct.new }

@@ -5,9 +5,9 @@ module Tracetool
     # Parses java stack traces
     class JavaTraceParser < Tracetool::BaseTraceParser
       # Describes java stack entry
-      STACK_ENTRY_PATTERN = /^(\s+at (?<call_description>.+))|((?<error>.+?): (?<message>.+))$/
+      STACK_ENTRY_PATTERN = /^(\s+at (?<call_description>.+))|((?<error>.+?): (?<message>.+))$/.freeze
       # Describes java method call
-      CALL_PATTERN = /(?<class>.+)\.(?<method>[^\(]+)\((((?<file>.+\.java):(?<line>\d+))|(?<location>.+))\)$/
+      CALL_PATTERN = /(?<class>.+)\.(?<method>[^\(]+)\((((?<file>.+\.java):(?<line>\d+))|(?<location>.+))\)$/.freeze
 
       def initialize(files)
         super(STACK_ENTRY_PATTERN, CALL_PATTERN, files, true)
@@ -17,11 +17,11 @@ module Tracetool
     class JavaTraceScanner
       # Usually java trace starts with
       #   com.something.SomeClass: Some message
-      RX_FIRST_EXCEPTION_LINE = /^(.*):(.*)$/
+      RX_FIRST_EXCEPTION_LINE = /^(.*):(.*)$/.freeze
       # Rest is expanded as
       #   at com.other.OtherClass.someMethod(OtherClass.java:42)
       # Source marker can be just "Native Method" or "Unknown Source"
-      RX_OTHER_EXCEPTION_LINE = /at [^(]+\((([^:]+:\d+)|(Unknown Source))|(Native Method)\)$/
+      RX_OTHER_EXCEPTION_LINE = /at [^(]+\((([^:]+:\d+)|(Unknown Source))|(Native Method)\)$/.freeze
 
       def initialize(string)
         @trace = string
@@ -44,6 +44,7 @@ module Tracetool
           # Split into lines
           first, *rest = string.split("\n")
           return unless RX_FIRST_EXCEPTION_LINE.match(first)
+
           rest.all? { |line| RX_OTHER_EXCEPTION_LINE.match(line) }
         end
 

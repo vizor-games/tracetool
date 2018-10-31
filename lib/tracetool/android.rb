@@ -16,6 +16,7 @@ module Tracetool
         # Find scanner which matches trace format
         @scanner = SCANNERS.map { |s| s[trace] }.compact.first
         raise(ArgumentError, "#{trace}\n not android trace?") unless @scanner
+
         @scanner.process(context)
       end
 
@@ -25,6 +26,7 @@ module Tracetool
       #   Or `nil`. If there was no scanning.
       def parser(files)
         return unless @scanner
+
         @scanner.parser(files)
       end
     end

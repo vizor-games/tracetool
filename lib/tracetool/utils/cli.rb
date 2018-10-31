@@ -27,9 +27,10 @@ module Tracetool
 
     def self.check_ios(options)
       return unless options.platform == :ios
+
       {
         'address' => options.address,
-        'module' =>  options.modulename
+        'module' => options.modulename
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
     end
 

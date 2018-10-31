@@ -7,6 +7,7 @@ module Tracetool
       # Describes android stack entry
       STACK_ENTRY_PATTERN =
         %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\.=-]+)( )?(:? (?<call_description>.+))?$}
+        .freeze
       # Describes android native method call (class::method and source file with line number)
       CALL_PATTERN = [
         /((Routine )?(?<method>.+) ((in)|(at)) (?<file>.+):(?<line>\d+))/,
@@ -33,7 +34,9 @@ module Tracetool
       # @param [String] trace packed stack trace
       # @return well formed stack trace
       def unpack(trace)
-        dump_body = prepare(trace).map.with_index { |line, index| convert_line(line, index) }
+        dump_body = prepare(trace)
+                    .map
+                    .with_index { |line, index| convert_line(line, index) }
         add_header(dump_body.join("\n"))
       end
 
@@ -52,7 +55,8 @@ module Tracetool
         frame = index
         addr = line[/^(-?\d+) (.*)$/, 1]
         lib = line[/^(-?\d+) (.*)$/, 2].strip
-        '    #%02i  pc %08x  %s'.format(frame, addr, lib)
+        '    #%02<frame>i  pc %08<addr>x  %<lib>s'
+          .format(frame: frame, addr: addr, lib: lib)
       end
 
       # If needed here we'll drop all unneeded leading characters from each
@@ -66,14 +70,15 @@ module Tracetool
     # Processes native traces
     class NativeTraceScanner
       # Initial sequence of asterisks which marks begining of trace body
-      TRACE_DELIMETER = '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***'.freeze
-      RX_INITIAL_ASTERISKS = /#{TRACE_DELIMETER.gsub('*', '\*')}/
+      TRACE_DELIMETER =
+        '*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***'.freeze
+      RX_INITIAL_ASTERISKS = /#{TRACE_DELIMETER.gsub('*', '\*')}/.freeze
       # Contains address line like
       #
       # ```
       # pc 00000000004321ec libfoo.so
       # ```
-      RX_PC_ADDRESS = /pc \d+/
+      RX_PC_ADDRESS = /pc \d+/.freeze
 
       # Format of packed trace.
       # Consists of one or more trace blocks.
@@ -87,7 +92,7 @@ module Tracetool
       # ** symbol offset `/\d+/`
       #
       # Last two entries can be missing.
-      RX_PACKED_FORMAT = /^(<<<([-\d]+ [^ ]+ (.+)?;)+>>>)+$/
+      RX_PACKED_FORMAT = /^(<<<([-\d]+ [^ ]+ (.+)?;)+>>>)+$/.freeze
 
       # @param [String] string well formed native android stack trace
       # @see https://developer.android.com/ndk/guides/ndk-stack.html
