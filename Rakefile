@@ -1,16 +1,9 @@
-begin
-  require 'rubocop/rake_task'
-  require 'rspec/core/rake_task'
+require 'bundler/setup'
+require 'rubocop/rake_task'
+require 'rspec/core/rake_task'
 
-  RSpec::Core::RakeTask.new(:rspec)
-  RuboCop::RakeTask.new(:lint)
-rescue LoadError => x
-  puts 'Some gems where missing. Fake tasks will be generated'
-  puts "Error: #{x.message}"
-
-  task(:lint) {}
-  task(:rspec) {}
-end
+RSpec::Core::RakeTask.new(:rspec)
+RuboCop::RakeTask.new(:lint)
 
 require_relative 'build/version'
 require_relative 'lib/version'
