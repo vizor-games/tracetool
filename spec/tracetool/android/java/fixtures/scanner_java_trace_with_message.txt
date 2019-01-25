@@ -1,0 +1,8 @@
+when java trace with error message
+java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
+  at java.lang.Thread.nativeCreate(Native Method)
+  at java.lang.Thread.start(Thread.java:1063)
+  at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
+  at java.util.concurrent.ThreadPoolExecutor.ensurePrestart(ThreadPoolExecutor.java:1553)
+  at java.util.concurrent.ScheduledThreadPoolExecutor.delayedExecute(ScheduledThreadPoolExecutor.java:306)
+  at java.util.concurrent.ScheduledThreadPoolExecutor.schedule(ScheduledThreadPoolExecutor.java:503)

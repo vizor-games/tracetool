@@ -1,0 +1,6 @@
+when trace contains frames tagged with `Unknown source`
+java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
+  at java.lang.Thread.nativeCreate(Native Method)
+  at java.lang.Thread.start(Thread.java:1063)
+  at com.google.android.zzv.zza(Unknown Source)
+  at com.google.android.internal.zzv.zzg(Unknown Source)

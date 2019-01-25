@@ -1,0 +1,10 @@
+when android trace contains Caused by ...
+java.lang.RuntimeException: Package manager has died
+ at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:258)
+ at android.opengl.GLSurfaceView$GLThread.guardedRun(GLSurfaceView.java:1648)
+ at android.opengl.GLSurfaceView$GLThread.run(GLSurfaceView.java:1353)
+Caused by: android.os.DeadObjectException
+ at android.os.BinderProxy.transactNative(Native Method)
+ at android.os.BinderProxy.transact(Binder.java:503)
+ at android.content.pm.IPackageManager$Stub$Proxy.getPackageInfo(IPackageManager.java:2730)
+ at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:253)

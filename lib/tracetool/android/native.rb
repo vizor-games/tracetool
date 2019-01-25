@@ -54,7 +54,7 @@ module Tracetool
       def convert_line(line, index)
         frame = index
         addr = line[/^(-?\d+) (.*)$/, 1]
-        lib = line[/^(-?\d+) (.*)$/, 2].strip
+        lib = (line[/^(-?\d+) (.*)$/, 2] || '').strip # nil safe
         '    #%02<frame>i  pc %08<addr>x  %<lib>s'
           .format(frame: frame, addr: addr, lib: lib)
       end

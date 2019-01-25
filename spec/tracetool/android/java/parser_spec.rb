@@ -6,9 +6,13 @@ describe Tracetool::Android::JavaTraceParser do
     let(:trace) do
       <<-JAVA.strip_indent
       java.lang.OutOfMemoryError: pthread_create (1040KB stack) failed: Try again
-            at java.lang.Thread.nativeCreate(Native Method)
-            at java.lang.Thread.start(Thread.java:1063)
-            at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
+        at java.lang.Thread.nativeCreate(Native Method)
+        at java.lang.Thread.start(Thread.java:1063)
+        at java.util.concurrent.ThreadPoolExecutor.addWorker(ThreadPoolExecutor.java:920)
+      Caused by: android.os.DeadObjectException
+        at android.os.BinderProxy.transactNative(Native Method)
+        at android.os.BinderProxy.transact(Binder.java:503)
+        ... 234 more
       JAVA
     end
 

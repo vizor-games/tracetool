@@ -1,0 +1,6 @@
+when java trace contains `... xx more`
+java.lang.RuntimeException: Package manager has died
+ at android.app.ApplicationPackageManager.getPackageInfo(ApplicationPackageManager.java:258)
+ at android.opengl.GLSurfaceView$GLThread.guardedRun(GLSurfaceView.java:1648)
+ at android.opengl.GLSurfaceView$GLThread.run(GLSurfaceView.java:1353)
+ ... 6 more

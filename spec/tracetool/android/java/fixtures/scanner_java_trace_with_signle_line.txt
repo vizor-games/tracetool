@@ -1,0 +1,2 @@
+when trace contains only message line
+java.lang.SecurityException: META-INF/MANIFEST.MF has invalid digest for a.png in a.png
