@@ -1,4 +1,4 @@
-# New
+# Version 0.4.1
 
 * Fix issue when java traces with (Unknown Source) tag were unmatched
 * [#4](https://github.com/vizor-games/tracetool/pull/4) Fixed false negative match for android native stacktraces with signed addresses
@@ -6,6 +6,8 @@
   with original file.
 * [#6](https://github.com/vizor-games/tracetool/pull/6) Fixed issue when ambiguous file names were resolved wrongly.
 * Fixed issue when library path contained `=` symbol led `NativeTraceParser` to drop all lines.
+* Fixed issue when java traces were not recognized
+* Fixed issue when native trace could not be unpacked due missing library string
 
 # Version 0.4.0
 
