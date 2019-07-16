@@ -32,3 +32,6 @@ Eval:
   Exclude:
     # Allow eval for configuration values evaluation
     - 'lib/mbuild/core/configuration.rb'
+Style/FrozenStringLiteralComment:
+  Exclude: 
+    - '**/*'
