@@ -2,10 +2,10 @@ RSpec::Matchers.define :exit do |expected|
   match do |actual|
     begin
       actual.call
-    rescue StandardError => x
-      @error = x
-    rescue SystemExit => x
-      @error = x
+    rescue StandardError => e
+      @error = e
+    rescue SystemExit => e
+      @error = e
     end
 
     @error.is_a?(SystemExit) && @error.status == expected

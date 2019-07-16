@@ -56,6 +56,20 @@ module Tracetool
         end
       end
 
+      context 'when lib name contains !, _, etc' do
+        let(:crash) do
+          with_header <<-CRASH.strip_indent
+            Stack frame #00  pc 013de04c  /data/app/com.foo-E3kI_P7yHky-xrYxNaAJMQ==/split_config.arm64_v8a.apk!/lib/arm64-v8a/libapp.so: Routine Throwable::ctorThrowable(String*, Throwable*) at /build/native/src/Throwable.cpp:73
+          CRASH
+        end
+
+        it 'extracts lib name' do
+          puts crash
+          expect(parser.parse(crash).first[:lib])
+            .to eq('/data/app/com.foo-E3kI_P7yHky-xrYxNaAJMQ==/split_config.arm64_v8a.apk!/lib/arm64-v8a/libapp.so')
+        end
+      end
+
       context 'when call doesn\'t match' do
         let(:crash) do
           with_header <<-CRASH.strip_indent

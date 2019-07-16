@@ -7,7 +7,7 @@ module Tracetool
   # Tracetool cli args parser
   class ParseArgs
     # List of supported abis
-    ARCH_LIST = %i[armeabi-v7a armeabi x86 arm64 x86_64].freeze
+    ARCH_LIST = %i[armeabi-v7a armeabi x86 arm64 arm64-v8a x86_64].freeze
     #
     # Return a structure describing the options.
     #
@@ -19,10 +19,10 @@ module Tracetool
       check(options)
       check_ios(options)
       options
-    rescue OptionParser::MissingArgument => x
-      io.write ["Error occurred: #{x.message}", '', opt_parser.help].join("\n")
+    rescue OptionParser::MissingArgument => e
+      io.write ["Error occurred: #{e.message}", '', opt_parser.help].join("\n")
       io.write "\n"
-      raise(x)
+      raise(e)
     end
 
     def self.check_ios(options)

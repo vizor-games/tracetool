@@ -5,9 +5,10 @@ module Tracetool
     # Android traces scanner and mapper
     class NativeTraceParser < Tracetool::BaseTraceParser
       # Describes android stack entry
+      # rubocop:disable Metrics/LineLength
       STACK_ENTRY_PATTERN =
-        %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\.=-]+)( )?(:? (?<call_description>.+))?$}
-        .freeze
+        %r{Stack frame #(?<frame>\d+)  (?<address>\w+ [a-f\d]+)  (?<lib>[/\w\d\._!=-]+)( )?(:? (?<call_description>.+))?$}.freeze
+      # rubocop:enable Metrics/LineLength
       # Describes android native method call (class::method and source file with line number)
       CALL_PATTERN = [
         /((Routine )?(?<method>.+) ((in)|(at)) (?<file>.+):(?<line>\d+))/,
@@ -92,7 +93,7 @@ module Tracetool
       # ** symbol offset `/\d+/`
       #
       # Last two entries can be missing.
-      RX_PACKED_FORMAT = /^(<<<([-\d]+ [^ ]+ (.+)?;)+>>>)+$/.freeze
+      RX_PACKED_FORMAT = /^(<<<([-?\d]+ [^ ]+ (.+)?;)+>>>)+$/.freeze
 
       # @param [String] string well formed native android stack trace
       # @see https://developer.android.com/ndk/guides/ndk-stack.html

@@ -1,3 +1,9 @@
+# Version 0.4.2
+
+* CLI accepts arm64-v8a arch
+* Allow negative integers in packed format
+* Allow \_, ! symbols in library name
+
 # Version 0.4.1
 
 * Fix issue when java traces with (Unknown Source) tag were unmatched

@@ -46,6 +46,11 @@ module Tracetool
             trace = '<<<305256 libc.so tgkill+12;294883 libc.so pthread_kill+34;121773 libc.so raise+10;>>>'
             expect(NativeTraceScanner.packed?(trace)).to be_truthy
           end
+
+          it 'should match with negative pointers' do
+            trace = '<<<-12345678 foo.so ;12345678 foo.so __bar 42;>>>'
+            expect(NativeTraceScanner.packed?(trace)).to be_truthy
+          end
         end
       end
 

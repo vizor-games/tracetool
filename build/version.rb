@@ -27,9 +27,9 @@ module Tracetool
       private
 
       def bump_version_array(version, major, minor, patch)
-        version = [version[0] + major, 0, 0] if major > 0
-        version = [version[0], version[1] + minor, 0] if minor > 0
-        version = [version[0], version[1], version[2] + patch] if patch > 0
+        version = [version[0] + major, 0, 0] if major.positive?
+        version = [version[0], version[1] + minor, 0] if minor.positive?
+        version = [version[0], version[1], version[2] + patch] if patch.positive?
 
         version
       end
