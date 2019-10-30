@@ -7,7 +7,7 @@ module Tracetool
   # Tracetool cli args parser
   class ParseArgs
     # List of supported abis. Only needed for iOS unpacking
-    ARCH_LIST = %i[armeabi arm64].freeze
+    ARCH_LIST = %i[arm arm64].freeze
     #
     # Return a structure describing the options.
     #

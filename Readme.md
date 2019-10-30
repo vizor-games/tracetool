@@ -16,7 +16,7 @@ To install `tracetool`, use the following command:
 $ gem install tracetool
 ```
 
-Alternatively, if you've checked the source out directly, you can call 
+Alternatively, if you've checked the source out directly, you can call
 
 ```sh
 rake gem:install
@@ -28,22 +28,20 @@ from the root project directory.
 
 ### tracetool Command-line Tool
 
-`tracetool` accepts trace content through `STDIN` or from file. Tool configuration is passed through command line 
-arguments. Android and iOS modes are assuming certain symbols layout. 
+`tracetool` accepts trace content through `STDIN` or from file. Tool configuration is passed through command line
+arguments. Android and iOS modes are assuming certain symbols layout.
 
 #### Unpacking Android Native Traces
 
-> You need `ndk-stack` in your PATH to use this feature. See 
+> You need `ndk-stack` in your PATH to use this feature. See
 > [Android NDK | ndk-stack ](https://developer.android.com/ndk/guides/ndk-stack.html)
 > for more information.
 
-To process native Android stack trace you need to pass following CLI arguments: 
+To process native Android stack trace you need to pass following CLI arguments:
 
 * `--platform android` - switch to Android mode
-* `--symbols %path%` - specify compilation symbols location. You need to specify path to `local/%abi%` directory rest
- of the path will be evaluated. If no `--symbols` argument passed current directory assumed to be compilation symbols
-  location. 
-* `--arch` - valid Android architecture. This value is added to path.
+* `--symbols %path%` - specify compilation symbols location. If no `--symbols` argument passed current directory assumed
+  to be compilation symbols location.
 
 ##### Supported formats
 
@@ -65,9 +63,9 @@ backtrace:
        #04  pc 000083ea  /data/local/ndk-tests/crasher
        #05  pc 00008458  /data/local/ndk-tests/crasher
        #06  pc 0000d362  /system/lib/libc.so
-``` 
+```
 
-* Striped trace from Google Play dashboard: 
+* Striped trace from Google Play dashboard:
 ```
 backtrace:
       native: pc 00000000004321ec  libvizornative.so
@@ -82,30 +80,30 @@ backtrace:
 ```
 
 > Here addresses `.so`-names packed in `;` separated string.
- 
+
 #### Unpacking Android Java Traces
 
-> This feature is useless at the moment  
+> This feature is useless at the moment
 
-#### Unpacking iOS traces 
+#### Unpacking iOS traces
 
-> You need MacOS and `atos` (XCode Tools) to use this feature. 
+> You need MacOS and `atos` (XCode Tools) to use this feature.
 > See [`man atos`](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/atos.1.html)
-> for more information. 
+> for more information.
 
 To desymbolicate iOS traces you need to pass following arguments:
 
 * `--symbols` - directory containing `dSYMs/%AppName%.app.dSYM/Contents/Resources/DWARF/%AppName%`. If no `--symbols`
- specified `tracetool` will use current directory 
-* `--arch` - valid iOS arch (`x86_64` or `arm64`)
+ specified `tracetool` will use current directory
+* `--arch` - valid iOS arch (`arm` or `arm64`)
 * `--address` - application load address
-* `--module` - your application name. 
+* `--module` - your application name.
 
 > To learn more about *load address* see [Understanding and Analyzing Application Crash Reports](https://developer.apple.com/library/content/technotes/tn2151/_index.html)
 
 #### Supported trace formats
 
-In iOS mode `tracetool` recognizes only thread stack trace format: 
+In iOS mode `tracetool` recognizes only thread stack trace format:
 
 ```
 0  Foo                                 0x00000001029b2d48 Foo + 159048
@@ -120,9 +118,9 @@ In iOS mode `tracetool` recognizes only thread stack trace format:
 
 See [Changelog.md](Changelog.md) for a list of changes.
 
-## Roadmap 
+## Roadmap
 
-See [Roadmap.md](Roadmap.md) for a list of scheduled features and changes. 
+See [Roadmap.md](Roadmap.md) for a list of scheduled features and changes.
 
 ## License
 
