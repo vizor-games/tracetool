@@ -1,4 +1,4 @@
-# New
+# Version 0.5.0
 
 * Android unpacker does not need to know about cpu abi. We use just direct path to object files
 
