@@ -195,46 +195,8 @@ module Tracetool
           TRACE
 
           Dir.mktmpdir do |dir|
-            ctx = OpenStruct.new(symbols: dir)
+            ctx = OpenStruct.new(symbols: File.join(dir, 'local', 'arch'))
             expect(NativeTraceScanner.new(trace).process(ctx)).to eq(expect)
-          end
-        end
-
-        context 'when context has arch and symbols' do
-          let(:exec) { double }
-          before do
-            expect(Tracetool::Pipe::Executor)
-              .to receive(:new)
-              .with('ndk-stack', %w[-sym /tmp/symbols/local/arch])
-              .and_return(exec)
-            allow(exec).to receive(:<<).and_return('native')
-          end
-
-          it do
-            ctx = OpenStruct.new(symbols: '/tmp/symbols', arch: 'arch')
-            expect(NativeTraceScanner.new(trace).process(ctx)).to eq('native')
-          end
-        end
-
-        context 'when context has only symbols' do
-          let(:exec) { double }
-          before do
-            @tmp_dir = Dir.mktmpdir
-            FileUtils.mkdir_p(File.join(@tmp_dir, 'local/arch'))
-            expect(Tracetool::Pipe::Executor)
-              .to receive(:new)
-              .with('ndk-stack', ['-sym', File.join(@tmp_dir, 'local/arch')])
-              .and_return(exec)
-            allow(exec).to receive(:<<).and_return('native')
-          end
-
-          it do
-            ctx = OpenStruct.new(symbols: @tmp_dir)
-            expect(NativeTraceScanner.new(trace).process(ctx)).to eq('native')
-          end
-
-          after do
-            FileUtils.remove_entry @tmp_dir
           end
         end
       end

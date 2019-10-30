@@ -6,8 +6,8 @@ require_relative '../../version'
 module Tracetool
   # Tracetool cli args parser
   class ParseArgs
-    # List of supported abis
-    ARCH_LIST = %i[armeabi-v7a armeabi x86 arm64 arm64-v8a x86_64].freeze
+    # List of supported abis. Only needed for iOS unpacking
+    ARCH_LIST = %i[armeabi arm64].freeze
     #
     # Return a structure describing the options.
     #
@@ -30,14 +30,14 @@ module Tracetool
 
       {
         'address' => options.address,
-        'module' => options.modulename
+        'module' => options.modulename,
+        'arch' => options.arch
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
     end
 
     def self.check(options)
       {
-        'platform' => options.platform,
-        'arch' => options.arch
+        'platform' => options.platform
       }.each { |arg, check| raise(OptionParser::MissingArgument, arg) unless check }
     end
 

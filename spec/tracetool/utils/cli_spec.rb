@@ -12,11 +12,18 @@ describe Tracetool::ParseArgs do
       end
     end
 
-    context 'when missing arch' do
+    context 'when missing arch for ios' do
       it do
         io = StringIO.new
-        expect { cli.parse(%w[--platform android], io) }
+        expect { cli.parse(%w[--platform ios], io) }
           .to raise_error(OptionParser::MissingArgument)
+      end
+    end
+
+    context 'when missing arch for android' do
+      it do
+        expect { cli.parse(%w[--platform android], StringIO.new) }
+          .not_to raise_error
       end
     end
 
@@ -46,13 +53,13 @@ describe Tracetool::ParseArgs do
 
     context 'when --symbols missing' do
       it 'contains use current working dir' do
-        expect(cli.parse(%w[--platform android --arch x86]).sym_dir).to eq(Dir.pwd)
+        expect(cli.parse(%w[--platform android]).sym_dir).to eq(Dir.pwd)
       end
     end
 
     context 'when has --symbols argument' do
       it 'contains argument value' do
-        expect(cli.parse(%w[--platform android --arch x86 --symbols x]).sym_dir)
+        expect(cli.parse(%w[--platform android --symbols x]).sym_dir)
           .to eq('x')
       end
     end

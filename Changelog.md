@@ -1,3 +1,7 @@
+# New
+
+* Android unpacker does not need to know about cpu abi. We use just direct path to object files
+
 # Version 0.4.2
 
 * CLI accepts arm64-v8a arch
