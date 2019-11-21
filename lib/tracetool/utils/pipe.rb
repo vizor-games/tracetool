@@ -1,6 +1,7 @@
 require 'open3'
+
 module Tracetool
-  # helper module for launching commands
+  # Helper module for launching commands
   module Pipe
     # Executes shell command
     class Executor
@@ -14,12 +15,10 @@ module Tracetool
       end
 
       def <<(args)
-        args = args.join("\n") if args.is_a? Array
-        IO.popen(cmd, 'r+') do |io|
-          io.write(args)
-          io.close_write
-          io.read.chomp
-        end
+        out, err, status = Open3.capture3({}, *cmd, stdin_data: args)
+        raise "#{cmd.join(' ')} (exit: #{status.exitstatus}) #{err.chomp}" unless status.success?
+
+        out.chomp
       end
     end
 

@@ -16,8 +16,11 @@ describe Tracetool::Pipe do
 
     it 'interprets arguments correctly' do
       expect(pipe << 'test').to eq('test')
-      expect(pipe << 'rest').to eq('')
       expect(pipe << "test\nrest\ntest").to eq("test\ntest")
+    end
+
+    it 'raises exception if exit was\'t successfull' do
+      expect { pipe << 'rest' }.to raise_error(RuntimeError)
     end
   end
 end
