@@ -1,7 +1,7 @@
 module Tracetool
   # Version constant
   module Version
-    VERSION = [0, 5, 3].freeze
+    VERSION = [0, 5, 4].freeze
 
     class << self
       # @return [String] version string

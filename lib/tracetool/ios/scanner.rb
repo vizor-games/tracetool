@@ -37,7 +37,7 @@ module Tracetool
 
       def process(trace, context)
         trace = parse(trace)
-        desym = run_atos(context, trace.map(&:last))
+        desym = run_atos(context, trace.map(&:last).join('  '))
         # Add useful columns to unpacked trace
         mix(trace, desym.split("\n")).join("\n")
       end

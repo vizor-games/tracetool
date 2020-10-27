@@ -1,3 +1,7 @@
+# Version 0.5.4
+
+* Fix command line for atos: pass list of addresses as space separated string
+
 # Version 0.5.3
 
 * Fine grained iOS trace parsing to handle binary names with spaces correctly.
