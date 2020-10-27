@@ -1,3 +1,7 @@
+# Version 0.5.2
+
+* Allow iOS module name to contain spaces
+
 # Version 0.5.1
 
 * Catch process error if atos fails to decode trace

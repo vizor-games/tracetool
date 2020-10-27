@@ -1,37 +1,5 @@
 module Tracetool
   module IOS
-    # Converts context to atos arguments
-    class AtosContext
-      # If no arch specified will use `arm64`
-      DEFAULT_ARCH = 'arm64'.freeze
-
-      # List of required argument names
-      REQUIRED_ARGUMENTS = %i[load_address xarchive module_name].freeze
-
-      def initialize(ctx)
-        check_arguments(ctx)
-        @load_address = ctx.load_address
-        @binary_path = module_binary(ctx.xarchive, ctx.module_name)
-        @arch = ctx.arch || 'arm64'
-      end
-
-      def to_args
-        %w[-o -l -arch].zip([@binary_path, @load_address, @arch]).flatten
-      end
-
-      private
-
-      def module_binary(xarchive, module_name)
-        File.join(xarchive, 'dSYMs', "#{module_name}.app.dSYM", 'Contents', 'Resources', 'DWARF', module_name)
-      end
-
-      def check_arguments(ctx)
-        REQUIRED_ARGUMENTS.each do |a|
-          ctx[a] || raise(ArgumentError, "Missing `#{a}` value")
-        end
-      end
-    end
-
     # launches atos
     class IOSTraceScanner
       # Stack trace line consists of numerous whitespace separated
@@ -44,8 +12,27 @@ module Tracetool
       # @return [Array] containing (%binary_name%, %address%) pairs
       def parse(trace)
         trace.split("\n").map do |line|
-          line.split(' ')[1..2] # Fetch binary name and address
+          parse_line(line)
         end
+      end
+
+      # Parse trace line from trace. Which usualy looks like this:
+      #   3   My Module Name      0x0000000102d6e9f4 My Module Name + 5859828
+      # We need to fetch two values: 'My Module Name' and '0x0000000102d6e9f4'.
+      def parse_line(line)
+        parts = line.split(' ')
+        parts.shift # Frame number, not needed
+
+        module_name = ''
+
+        until parts.first.start_with?('0x')
+          module_name += parts.shift
+          module_name += ' '
+        end
+
+        address = parts.shift
+
+        [module_name.chop, address]
       end
 
       def process(trace, context)

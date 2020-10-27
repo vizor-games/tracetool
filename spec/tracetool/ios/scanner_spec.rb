@@ -6,7 +6,7 @@ module Tracetool
       describe '#parse' do
         let(:trace) do
           <<-IOS_TRACE
-          0  Foo                                 0x00000001029b2d48 Foo + 159048
+          0  My Foo Module                       0x00000001029b2d48 My Foo Module + 159048
           1  Foo                                 0x00000001029b37d0 Foo + 161744
           2  libsystem_platform.dylib            0x00000001857dbb44 _sigtramp + 52
           3  Foo                                 0x0000000102cf6178 Foo + 3580280
@@ -16,29 +16,29 @@ module Tracetool
           7  CoreFoundation                      0x0000000185b5c358 <redacted> + 24
           8  CoreFoundation                      0x0000000185b5c2d8 <redacted> + 88
           9  CoreFoundation                      0x0000000185a7a2d8 CFRunLoopRunSpecific + 436
-          10  GraphicsServices                    0x000000018790bf84 GSEventRunModal + 100
-          11  UIKit                               0x000000018f027880 UIApplicationMain + 208
-          12  Foo                                 0x0000000102995c08 Foo + 39944
-          13  libdyld.dylib                       0x000000018559e56c <redacted> + 4
+          10  GraphicsServices                   0x000000018790bf84 GSEventRunModal + 100
+          11  UIKit                              0x000000018f027880 UIApplicationMain + 208
+          12  Foo                                0x0000000102995c08 Foo + 39944
+          13  libdyld.dylib                      0x000000018559e56c <redacted> + 4
           IOS_TRACE
         end
 
         let(:expected) do
-          <<-EXPECT.strip_indent.split("\n").map { |l| l.split(' ') }
-          Foo 0x00000001029b2d48
-          Foo 0x00000001029b37d0
-          libsystem_platform.dylib 0x00000001857dbb44
-          Foo 0x0000000102cf6178
-          Foo 0x0000000102cc36c0
-          UIKit 0x000000018efc4078
-          UIKit 0x000000018f903f98
-          CoreFoundation 0x0000000185b5c358
-          CoreFoundation 0x0000000185b5c2d8
-          CoreFoundation 0x0000000185a7a2d8
-          GraphicsServices 0x000000018790bf84
-          UIKit 0x000000018f027880
-          Foo 0x0000000102995c08
-          libdyld.dylib 0x000000018559e56c
+          <<-EXPECT.strip_indent.split("\n").map { |l| l.split("\t") }
+          My Foo Module\t0x00000001029b2d48
+          Foo\t0x00000001029b37d0
+          libsystem_platform.dylib\t0x00000001857dbb44
+          Foo\t0x0000000102cf6178
+          Foo\t0x0000000102cc36c0
+          UIKit\t0x000000018efc4078
+          UIKit\t0x000000018f903f98
+          CoreFoundation\t0x0000000185b5c358
+          CoreFoundation\t0x0000000185b5c2d8
+          CoreFoundation\t0x0000000185a7a2d8
+          GraphicsServices\t0x000000018790bf84
+          UIKit\t0x000000018f027880
+          Foo\t0x0000000102995c08
+          libdyld.dylib\t0x000000018559e56c
           EXPECT
         end
 

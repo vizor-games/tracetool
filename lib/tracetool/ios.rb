@@ -1,3 +1,4 @@
+require_relative 'ios/atos_context'
 require_relative 'ios/scanner'
 require_relative 'ios/parser'
 
