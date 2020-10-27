@@ -75,9 +75,9 @@ module Tracetool
             2  UIKit                               0x000000018559e56c _sigtramp + 52
             INPUT
             ex = <<-EXPECTED.strip_indent.chomp
-            0 FooModule some::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
-            1 FooModule -[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
-            2 UIKit 0X000000018559e56c
+            0\tFooModule\tsome::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
+            1\tFooModule\t-[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
+            2\tUIKit\t0X000000018559e56c
             EXPECTED
             expect(launcher.process(input, ctx)).to eq(ex)
           end
@@ -106,7 +106,7 @@ module Tracetool
 
           it 'runs atos with arguments' do
             expect(IOSTraceScanner.new.process('0 FooModule 0x0', ctx))
-              .to eq('0 FooModule foo')
+              .to eq("0\tFooModule\tfoo")
           end
         end
       end

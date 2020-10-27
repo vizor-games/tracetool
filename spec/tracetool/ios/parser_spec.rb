@@ -3,9 +3,9 @@ require_relative lib('tracetool/ios/parser')
 describe Tracetool::IOS::IOSTraceParser do
   let(:trace) do
     <<-IOS.strip_indent
-    0 FooModule some::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
-    1 FooModule -[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
-    2 UIKit 0X000000018559e56c
+    0\tFooModule\tsome::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
+    1\tFooModule\t-[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
+    2\tUIKit\t0X000000018559e56c
     IOS
   end
 
@@ -22,7 +22,7 @@ describe Tracetool::IOS::IOSTraceParser do
   context 'when it cpp call' do
     let(:trace) do
       <<-IOS.strip_indent
-      0 FooModule some::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
+      0\tFooModule\tsome::cpp::namespace::CppClass::method(int, int, void*) (in FooModule) (CppClass.cpp:98)
       IOS
     end
 
@@ -52,7 +52,7 @@ describe Tracetool::IOS::IOSTraceParser do
   context 'when it objective c call' do
     let(:trace) do
       <<-IOS.strip_indent
-      1 FooModule -[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
+      1\tFooModule\t-[FooViewController touchesEnded:withEvent:] (in FooModule) (FooViewController.mm:314)
       IOS
     end
 
@@ -84,12 +84,48 @@ describe Tracetool::IOS::IOSTraceParser do
   context 'when it unknown call' do
     let(:trace) do
       <<-IOS.strip_indent
-      2 UIKit 0X000000018559e56c
+      2\tUIKit\t0X000000018559e56c
       IOS
     end
 
     it 'extracts address as call_description' do
       expect(parser.parse(trace).first[:call_description]).to eq('0X000000018559e56c')
+    end
+  end
+
+  context 'when module name contains spaces' do
+    let(:trace) do
+      <<-IOS.strip_indent
+      1\tFoo Module\t-[FooViewController touchesEnded:withEvent:] (in Foo Module) (FooViewController.mm:314)
+      IOS
+    end
+
+    it do
+      expect(parser.parse(trace).first[:binary]).to eq('Foo Module')
+    end
+
+    it 'extracts class' do
+      expect(parser.parse(trace).first[:call][:class])
+        .to eq('FooViewController')
+    end
+
+    it 'extracts method' do
+      expect(parser.parse(trace).first[:call][:method])
+        .to eq('touchesEnded:withEvent:')
+    end
+  end
+
+  context 'when binary name contains spaces and call is unknown' do
+    let(:trace) do
+      <<-IOS.strip_indent
+      1\tFoo Module\t0X000000018559e56c
+      IOS
+    end
+
+    it do
+      expect(parser.parse(trace).first[:binary]).to eq('Foo Module')
+      expect(parser.parse(trace).first[:call_description])
+        .to eq('0X000000018559e56c')
     end
   end
 end

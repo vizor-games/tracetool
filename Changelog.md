@@ -1,3 +1,7 @@
+# Version 0.5.3
+
+* Fine grained iOS trace parsing to handle binary names with spaces correctly.
+
 # Version 0.5.2
 
 * Allow iOS module name to contain spaces

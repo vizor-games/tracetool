@@ -5,7 +5,7 @@ module Tracetool
     # IOS traces scanner and source mapper
     class IOSTraceParser < Tracetool::BaseTraceParser
       # Describes IOS stack entry
-      STACK_ENTRY_PATTERN = /^(?<frame>\d+) (?<binary>[^ ]+) (?<call_description>.+)$/.freeze
+      STACK_ENTRY_PATTERN = /^(?<frame>\d+)\t(?<binary>.+)\t(?<call_description>.+)$/.freeze
       # Describes source block
       SOURCE_PATTERN =
         /^((-?\[(?<class>[^ ]+) (?<method>.+)\])|(?<method>.+)) \(in (?<module>.+)\) \((?<file>.+):(?<line>\d+)\)$/

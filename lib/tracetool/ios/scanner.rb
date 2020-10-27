@@ -59,12 +59,7 @@ module Tracetool
       def mix(trace, symbolicated)
         trace.zip(symbolicated).map.with_index do |pair, i|
           t, desym = pair
-          line = []
-          line << i
-          line << t.first
-          line << desym
-
-          line.join(' ')
+          "#{i}\t#{t.first}\t#{desym}"
         end
       end
     end
